@@ -175,6 +175,25 @@ namespace cs296
       distDef.Initialize(inc_rod[3][1], box, inc_rod[3][1]->GetWorldCenter(), box->GetWorldCenter());
       (b2DistanceJoint*)m_world->CreateJoint(&distDef);
     }
+
+    //Ball-1
+    {
+      b2Body* sbody;
+      b2CircleShape circle;
+      circle.m_radius = 1.0;
+
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 4.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+      b2BodyDef ballbd;
+      ballbd.type = b2_dynamicBody;
+      ballbd.position.Set(-15.0f, 31.0f);
+      sbody = m_world->CreateBody(&ballbd);
+      sbody->CreateFixture(&ballfd);
+    }
+
     /*
     //Ground
     b2Body* b1;
