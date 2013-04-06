@@ -62,6 +62,66 @@ namespace cs296
       f = m_world->CreateBody(&bd);
       f->CreateFixture(&shape, 0.0f);
     }
+
+    //Spring System
+    {
+      b2Body* fl_rod, *inc_rod[4][2];
+      b2Body* box;
+
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 8.0f);
+
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 20.0f;
+
+      //flat rod
+      {
+        b2BodyDef bd;
+        //bd.type = b2_dynamicBody;
+        bd.angle = b2_pi/2;
+        bd.position.Set(-35.0f, 35.0f);
+        b2Body* body = m_world->CreateBody(&bd);
+        body->CreateFixture(&fd);
+        fl_rod = body;
+      }
+
+      shape.SetAsBox(0.1f, 2.83f);
+
+      fd.shape = &shape;
+      fd.density = 20.0f;
+      
+      //inclined rods
+      for (int i = 0; i < 4; ++i){
+        for (int j = 0; j < 2; ++j){
+          b2BodyDef bd;
+          //bd.type = b2_dynamicBody;
+          bd.angle = (2*j-1)*b2_pi/6;
+          bd.position.Set(-38.5f + 3*i, 32.6f);
+          b2Body* body = m_world->CreateBody(&bd);
+          body->CreateFixture(&fd);
+          inc_rod[i][j] = body;
+        }
+      }
+      
+      //Punching Box
+      {
+        b2PolygonShape shape;
+        shape.SetAsBox(2, 2.5f);
+        
+        b2FixtureDef fd;
+        fd.shape = &shape;
+        fd.density = 20.0f;
+
+        b2BodyDef bd;
+        bd.position.Set(-22.7f, 32.6f);
+        //bd.type = b2_dynamicBody;
+        b2Body* body = m_world->CreateBody(&bd);
+        body->CreateFixture(&fd);
+        //body->ResetMassData
+        box = body;
+      }
+    }
     /*
     //Ground
     b2Body* b1;
