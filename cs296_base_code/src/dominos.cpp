@@ -194,6 +194,22 @@ namespace cs296
       sbody->CreateFixture(&ballfd);
     }
 
+    //Circular-Path
+    {
+      b2EdgeShape shape;
+      b2BodyDef bd;
+      b2Body* b1;
+
+      float x = 0.0f,y=40.0f,r=5.0f;
+      //Roll
+      for (int i = -5; i < 25; ++i)
+      {
+        shape.Set(b2Vec2(x + r*cos(i*b2_pi/20), y + r*sin(i*b2_pi/20)), b2Vec2(x + r*cos((i+1)*b2_pi/20), y + r*sin((i+1)*b2_pi/20)));
+        b1 = m_world->CreateBody(&bd);
+        b1->CreateFixture(&shape, 0.0f);
+      }
+    }
+
     /*
     //Ground
     b2Body* b1;
