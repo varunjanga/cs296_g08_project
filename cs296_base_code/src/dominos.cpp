@@ -63,6 +63,23 @@ namespace cs296
       f->CreateFixture(&shape, 0.0f);
     }
 
+    //Falling Box
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(2.0f, 2.0f);
+      
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 1000.0f;
+
+      b2BodyDef bd;
+      bd.position.Set(-35.0f, 50.0f);
+      bd.type = b2_dynamicBody;
+      b2Body* body = m_world->CreateBody(&bd);
+      body->CreateFixture(&fd);
+      body->ResetMassData();
+    }
+
     //Spring System
     {
       b2Body* fl_rod, *inc_rod[4][2];
@@ -78,7 +95,7 @@ namespace cs296
       //flat rod
       {
         b2BodyDef bd;
-        //bd.type = b2_dynamicBody;
+        bd.type = b2_dynamicBody;
         bd.angle = b2_pi/2;
         bd.position.Set(-35.0f, 35.0f);
         b2Body* body = m_world->CreateBody(&bd);
@@ -95,7 +112,7 @@ namespace cs296
       for (int i = 0; i < 4; ++i){
         for (int j = 0; j < 2; ++j){
           b2BodyDef bd;
-          //bd.type = b2_dynamicBody;
+          bd.type = b2_dynamicBody;
           bd.angle = (2*j-1)*b2_pi/6;
           bd.position.Set(-38.5f + 3*i, 32.6f);
           b2Body* body = m_world->CreateBody(&bd);
@@ -115,12 +132,40 @@ namespace cs296
 
         b2BodyDef bd;
         bd.position.Set(-22.7f, 32.6f);
-        //bd.type = b2_dynamicBody;
+        bd.type = b2_dynamicBody;
         b2Body* body = m_world->CreateBody(&bd);
         body->CreateFixture(&fd);
         //body->ResetMassData
         box = body;
       }
+      
+      b2Vec2 right_end1(0,-2.83);
+      b2Vec2 right_end2(0,2.83);
+      //joints
+      b2RevoluteJointDef jointDef;
+      b2DistanceJointDef distDef;
+      jointDef.Initialize(inc_rod[1][0], fl_rod, inc_rod[1][0]->GetWorldPoint(right_end2));
+      (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      jointDef.Initialize(inc_rod[0][0], inc_rod[0][1], inc_rod[0][0]->GetWorldCenter());
+      (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      jointDef.Initialize(inc_rod[1][0], inc_rod[1][1], inc_rod[1][0]->GetWorldCenter());
+      (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      jointDef.Initialize(inc_rod[2][0], inc_rod[2][1], inc_rod[2][0]->GetWorldCenter());
+      (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      jointDef.Initialize(inc_rod[3][0], inc_rod[3][1], inc_rod[3][0]->GetWorldCenter());
+      (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      jointDef.Initialize(inc_rod[0][0], inc_rod[1][1], inc_rod[0][0]->GetWorldPoint(right_end2));
+      (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      jointDef.Initialize(inc_rod[0][1], inc_rod[1][0], inc_rod[0][1]->GetWorldPoint(right_end1));
+      (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      jointDef.Initialize(inc_rod[1][0], inc_rod[2][1], inc_rod[1][0]->GetWorldPoint(right_end2));
+      (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      jointDef.Initialize(inc_rod[1][1], inc_rod[2][0], inc_rod[1][1]->GetWorldPoint(right_end1));
+      (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      jointDef.Initialize(inc_rod[2][0], inc_rod[3][1], inc_rod[2][0]->GetWorldPoint(right_end2));
+      (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      jointDef.Initialize(inc_rod[2][1], inc_rod[3][0], inc_rod[2][1]->GetWorldPoint(right_end1));
+      (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
     }
     /*
     //Ground
