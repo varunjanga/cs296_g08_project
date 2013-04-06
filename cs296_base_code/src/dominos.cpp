@@ -27,9 +27,9 @@
 #include "render.hpp"
 
 #ifdef __APPLE__
-	#include <GLUT/glut.h>
+  #include <GLUT/glut.h>
 #else
-	#include "GL/freeglut.h"
+  #include "GL/freeglut.h"
 #endif
 
 #include <cstring>
@@ -41,12 +41,34 @@ namespace cs296
 {
   dominos_t::dominos_t()
   {
+    //Floor-0
+    {
+      b2Body* f;
+      b2EdgeShape shape;
+      shape.Set(b2Vec2(-50.0f, 30.0f), b2Vec2(25.0f, 30.0f));
+
+      b2BodyDef bd;
+      f = m_world->CreateBody(&bd);
+      f->CreateFixture(&shape, 0.0f);
+    }
+    
+    //Floor-1
+    {
+      b2Body* f;
+      b2EdgeShape shape;
+      shape.Set(b2Vec2(0.0f, 20.0f), b2Vec2(50.0f, 20.0f));
+
+      b2BodyDef bd;
+      f = m_world->CreateBody(&bd);
+      f->CreateFixture(&shape, 0.0f);
+    }
+    /*
     //Ground
     b2Body* b1;
     {
       b2EdgeShape shape;
       shape.Set(b2Vec2(-90.0f, 0.0f), b2Vec2(90.0f, 0.0f));
-	
+  
       b2BodyDef bd;
       b1 = m_world->CreateBody(&bd);
       b1->CreateFixture(&shape, 0.0f);
@@ -56,7 +78,7 @@ namespace cs296
     {
       b2PolygonShape shape;
       shape.SetAsBox(6.0f, 0.25f);
-	
+  
       b2BodyDef bd;
       bd.position.Set(-31.0f, 30.0f);
       b2Body* ground = m_world->CreateBody(&bd);
@@ -67,27 +89,27 @@ namespace cs296
     {
       b2PolygonShape shape;
       shape.SetAsBox(0.1f, 1.0f);
-	
+  
       b2FixtureDef fd;
       fd.shape = &shape;
       fd.density = 20.0f;
       fd.friction = 0.1f;
-		
+    
       for (int i = 0; i < 10; ++i)
-	{
-	  b2BodyDef bd;
-	  bd.type = b2_dynamicBody;
-	  bd.position.Set(-35.5f + 1.0f * i, 31.25f);
-	  b2Body* body = m_world->CreateBody(&bd);
-	  body->CreateFixture(&fd);
-	}
+  {
+    b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.position.Set(-35.5f + 1.0f * i, 31.25f);
+    b2Body* body = m_world->CreateBody(&bd);
+    body->CreateFixture(&fd);
+  }
     }
       
     //Another horizontal shelf
     {
       b2PolygonShape shape;
       shape.SetAsBox(7.0f, 0.25f, b2Vec2(-20.f,20.f), 0.0f);
-	
+  
       b2BodyDef bd;
       bd.position.Set(1.0f, 6.0f);
       b2Body* ground = m_world->CreateBody(&bd);
@@ -99,27 +121,27 @@ namespace cs296
     {
       b2Body* b2;
       {
-	b2PolygonShape shape;
-	shape.SetAsBox(0.25f, 1.5f);
-	  
-	b2BodyDef bd;
-	bd.position.Set(-36.5f, 28.0f);
-	b2 = m_world->CreateBody(&bd);
-	b2->CreateFixture(&shape, 10.0f);
+  b2PolygonShape shape;
+  shape.SetAsBox(0.25f, 1.5f);
+    
+  b2BodyDef bd;
+  bd.position.Set(-36.5f, 28.0f);
+  b2 = m_world->CreateBody(&bd);
+  b2->CreateFixture(&shape, 10.0f);
       }
-	
+  
       b2Body* b4;
       {
-	b2PolygonShape shape;
-	shape.SetAsBox(0.25f, 0.25f);
-	  
-	b2BodyDef bd;
-	bd.type = b2_dynamicBody;
-	bd.position.Set(-40.0f, 33.0f);
-	b4 = m_world->CreateBody(&bd);
-	b4->CreateFixture(&shape, 2.0f);
+  b2PolygonShape shape;
+  shape.SetAsBox(0.25f, 0.25f);
+    
+  b2BodyDef bd;
+  bd.type = b2_dynamicBody;
+  bd.position.Set(-40.0f, 33.0f);
+  b4 = m_world->CreateBody(&bd);
+  b4->CreateFixture(&shape, 2.0f);
       }
-	
+  
       b2RevoluteJointDef jd;
       b2Vec2 anchor;
       anchor.Set(-37.0f, 40.0f);
@@ -130,24 +152,24 @@ namespace cs296
     //The train of small spheres
     {
       b2Body* spherebody;
-	
+  
       b2CircleShape circle;
       circle.m_radius = 0.5;
-	
+  
       b2FixtureDef ballfd;
       ballfd.shape = &circle;
       ballfd.density = 1.0f;
       ballfd.friction = 0.0f;
       ballfd.restitution = 0.0f;
-	
+  
       for (int i = 0; i < 10; ++i)
-	{
-	  b2BodyDef ballbd;
-	  ballbd.type = b2_dynamicBody;
-	  ballbd.position.Set(-22.2f + i*1.0, 26.6f);
-	  spherebody = m_world->CreateBody(&ballbd);
-	  spherebody->CreateFixture(&ballfd);
-	}
+  {
+    b2BodyDef ballbd;
+    ballbd.type = b2_dynamicBody;
+    ballbd.position.Set(-22.2f + i*1.0, 26.6f);
+    spherebody = m_world->CreateBody(&ballbd);
+    spherebody->CreateFixture(&ballfd);
+  }
     }
 
     //The pulley system
@@ -189,8 +211,8 @@ namespace cs296
       box1->CreateFixture(fd3);
 
       //The bar
-      bd->position.Set(10,15);	
-      fd1->density = 34.0;	  
+      bd->position.Set(10,15);  
+      fd1->density = 34.0;    
       b2Body* box2 = m_world->CreateBody(bd);
       box2->CreateFixture(fd1);
 
@@ -209,7 +231,7 @@ namespace cs296
     {
       b2PolygonShape shape;
       shape.SetAsBox(2.2f, 0.2f);
-	
+  
       b2BodyDef bd;
       bd.position.Set(14.0f, 14.0f);
       bd.type = b2_dynamicBody;
@@ -240,7 +262,7 @@ namespace cs296
       b2Body* sbody;
       b2CircleShape circle;
       circle.m_radius = 1.0;
-	
+  
       b2FixtureDef ballfd;
       ballfd.shape = &circle;
       ballfd.density = 50.0f;
@@ -305,7 +327,7 @@ namespace cs296
       fd3->shape = new b2PolygonShape;
       fd3->shape = &shape2;
       body3->CreateFixture(fd3);
-    }
+    }*/
   }
 
   sim_t *sim = new sim_t("Dominos", dominos_t::create);
