@@ -41,6 +41,9 @@ namespace cs296
 {
   dominos_t::dominos_t()
   {
+    //Globals
+    b2Body* f0;
+
     //Floor-0
     {
       b2Body* f;
@@ -50,6 +53,7 @@ namespace cs296
       b2BodyDef bd;
       f = m_world->CreateBody(&bd);
       f->CreateFixture(&shape, 0.0f);
+      f0 = f;
     }
     
     //Floor-1
@@ -146,6 +150,8 @@ namespace cs296
       b2DistanceJointDef distDef;
       jointDef.Initialize(inc_rod[1][0], fl_rod, inc_rod[1][0]->GetWorldPoint(right_end2));
       (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      distDef.Initialize(inc_rod[0][0], f0, inc_rod[0][0]->GetWorldPoint(right_end1), inc_rod[0][0]->GetWorldPoint(right_end1));
+      (b2RevoluteJoint*)m_world->CreateJoint(&distDef);
       jointDef.Initialize(inc_rod[0][0], inc_rod[0][1], inc_rod[0][0]->GetWorldCenter());
       (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
       jointDef.Initialize(inc_rod[1][0], inc_rod[1][1], inc_rod[1][0]->GetWorldCenter());
@@ -166,6 +172,8 @@ namespace cs296
       (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
       jointDef.Initialize(inc_rod[2][1], inc_rod[3][0], inc_rod[2][1]->GetWorldPoint(right_end1));
       (b2RevoluteJoint*)m_world->CreateJoint(&jointDef);
+      distDef.Initialize(inc_rod[3][1], box, inc_rod[3][1]->GetWorldCenter(), box->GetWorldCenter());
+      (b2DistanceJoint*)m_world->CreateJoint(&distDef);
     }
     /*
     //Ground
