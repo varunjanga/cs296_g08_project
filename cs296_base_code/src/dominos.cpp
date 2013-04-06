@@ -235,6 +235,15 @@ namespace cs296
         b1 = m_world->CreateBody(&bd);
         b1->CreateFixture(&shape, 0.0f);
       }
+
+      x = 13.6f;y = 35.0f;
+      //Ramp-3
+      for (int i = 30; i < 39; ++i)
+      {
+        shape.Set(b2Vec2(x + r*cos(i*b2_pi/20), y + r*sin(i*b2_pi/20)), b2Vec2(x + r*cos((i+1)*b2_pi/20), y + r*sin((i+1)*b2_pi/20)));
+        b1 = m_world->CreateBody(&bd);
+        b1->CreateFixture(&shape, 0.0f);
+      }
     }
 
     /*
