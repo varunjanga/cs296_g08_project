@@ -266,6 +266,35 @@ namespace cs296
       }
     }
 
+    //dominoes
+    {
+      b2BodyDef bd;
+      b2Body* body;
+      float len = 3.0f;
+      float x1 = 2.0f;
+      float y1 = 22.0f;
+      float x_offset = 2.0f;
+      float y_offset = 2.0f;
+      float x[5] = {x1,x1+x_offset,x1+2*x_offset,x1+3*x_offset,x1+4*x_offset};
+      float y[5] = {y1,y1+y_offset,y1+2*y_offset,y1+y_offset,y1};
+
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, len);
+    
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      fd.density = 35.0f;
+      fd.friction = 0.1f;
+
+      bd.type = b2_dynamicBody;
+
+      for(int i = 0; i < 5; i++){
+        bd.position.Set(x[i], y[i]);
+        body = m_world->CreateBody(&bd);
+        body->CreateFixture(&fd);
+      }
+    }
+
     /*
     //Ground
     b2Body* b1;
