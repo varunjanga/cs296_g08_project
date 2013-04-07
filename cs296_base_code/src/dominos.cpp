@@ -246,6 +246,89 @@ namespace cs296
       }
     }
 
+    //Pulley
+    float x=28.0f,y=37.0f;
+    {
+      b2BodyDef *bd = new b2BodyDef;
+      bd->type = b2_dynamicBody;
+      bd->position.Set(x,y);
+      bd->fixedRotation = true;
+      b2FixtureDef *fd1 = new b2FixtureDef;
+      fd1->density = 12.0;
+      fd1->friction = 0.5;
+      fd1->restitution = 0.f;
+      fd1->shape = new b2PolygonShape;
+      b2PolygonShape bs1;
+      bs1.SetAsBox(2,2, b2Vec2(0.f,0.f), 0);
+      fd1->shape = &bs1;
+      b2Body* box1 = m_world->CreateBody(bd);
+      box1->CreateFixture(fd1);
+      bd->position.Set(x+6,y-9);  
+      b2FixtureDef *fd2 = new b2FixtureDef;
+      fd2->density = 4.0;
+      fd2->friction = 0.5;
+      fd2->restitution = 0.f;
+      fd2->shape = new b2PolygonShape;
+      b2PolygonShape bs2;
+      bs2.SetAsBox(3,0.2, b2Vec2(0.0f,0.0f), 0);
+      fd2->shape = &bs2;    
+      b2Body* box2 = m_world->CreateBody(bd);
+      box2->CreateFixture(fd2);
+      b2PulleyJointDef* myjoint = new b2PulleyJointDef();
+      b2Vec2 worldAnchorOnBody1(x, y); // Anchor point on body 1 in world axis
+      b2Vec2 worldAnchorOnBody2(x+6, y-10); // Anchor point on body 2 in world axis
+      b2Vec2 worldAnchorGround1(x, y+10); // Anchor point for ground 1 in world axis
+      b2Vec2 worldAnchorGround2(x+6, y+10); // Anchor point for ground 2 in world axis
+      float32 ratio = 1.0f; // Define ratio
+      myjoint->Initialize(box1, box2, worldAnchorGround1, worldAnchorGround2, box1->GetWorldCenter(), box2->GetWorldCenter(), ratio);
+      m_world->CreateJoint(myjoint);
+    }
+    //sphere which act like pulley
+    {
+      b2Body* spherebody;
+      b2CircleShape circle;
+      circle.m_radius = 3;
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 1.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+      b2BodyDef ballbd;
+      //ballbd.type = b2_dynamicBody;
+      ballbd.position.Set(x+3,y+10);
+      spherebody = m_world->CreateBody(&ballbd);
+      spherebody->CreateFixture(&ballfd);
+    }
+      //support for right box
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(.2f, 2.2f);
+
+      b2BodyDef bd;
+      bd.position.Set(x, y-4.0f);
+      // bd.angle = b2_pi/4;
+      bd.type = b2_dynamicBody;
+      b2Body* body = m_world->CreateBody(&bd);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 1.f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body->CreateFixture(fd);
+
+      b2PolygonShape shape2;
+      // shape2.SetAsBox(0.2f, 2.0f);
+      b2BodyDef bd2;
+      bd2.position.Set(x, y-6.2f);
+      b2Body* body2 = m_world->CreateBody(&bd2);
+
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = body;
+      jointDef.bodyB = body2;
+      jointDef.localAnchorA.Set(0,-2.0f);
+      jointDef.localAnchorB.Set(0,0);
+      jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+    }
     /*
     //Ground
     b2Body* b1;
