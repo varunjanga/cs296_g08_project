@@ -270,8 +270,8 @@ namespace cs296
     {
       b2BodyDef bd;
       b2Body* body;
-      float len = 3.0f;
-      float x1 = 2.0f;
+      float len = 2.0f;
+      float x1 = 3.0f;
       float y1 = 22.0f;
       float x_offset = 2.0f;
       float y_offset = 2.0f;
