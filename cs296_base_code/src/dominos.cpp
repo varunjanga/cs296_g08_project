@@ -246,6 +246,26 @@ namespace cs296
       }
     }
 
+    //Stairs
+    {
+      b2BodyDef bd;
+      b2Body* f;
+      float x = 4.0f;
+      float y = 20.0f;
+      float x_offset = 2.0f;
+      float y_offset = 2.0f;
+      float x1[7] = {x,x,x+x_offset,x+x_offset,x+2*x_offset,x+2*x_offset,x+3*x_offset};
+      float y1[7] = {y,y+y_offset,y+y_offset,y+2*y_offset,y+2*y_offset,y+y_offset,y+y_offset};
+      float x2[7] = {x,x+x_offset,x+x_offset,x+2*x_offset,x+2*x_offset,x+3*x_offset,x+3*x_offset};
+      float y2[7] = {y+y_offset,y+y_offset,y+2*y_offset,y+2*y_offset,y+y_offset,y+y_offset,y};
+      for(int i = 0; i < 7; i++){
+        b2EdgeShape shape;
+        shape.Set(b2Vec2(x1[i], y1[i]), b2Vec2(x2[i], y2[i]));
+        f = m_world->CreateBody(&bd);
+        f->CreateFixture(&shape, 0.0f);
+      }
+    }
+
     /*
     //Ground
     b2Body* b1;
