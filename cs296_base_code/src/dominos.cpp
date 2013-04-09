@@ -205,6 +205,20 @@ namespace cs296
       (b2DistanceJoint*)m_world->CreateJoint(&distDef);
     }
 
+    /*! \b Ball-1
+    * - \c b2Body* sbody
+    *   - \c sbody : body representing the first ball being hit by the puncher
+    * - \c b2CircleShape circle
+    *   - \c circle : Its a circle of radius 1
+    * - \c b2BodyDef ballbd
+    *   - \c ballbd defines a body in the world.The world position of the body is set to (-15,31)
+    *   - \c ballbd.type is set to \c b2_dynamicBody, so that it acts as a rigid body
+    * - \c b2FixtureDef ballfd
+    *   - \c ballfd.density : its desity is set to 4 units
+    *   - \c ballfd.restitution : set to 0, so does not bounce.
+    *   - \c ballfd.friction : set to 0, so is smooth.
+    * - At the end, the fixture is attached to the body
+    */
     //Ball-1
     {
       b2Body* sbody;
