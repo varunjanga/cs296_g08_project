@@ -430,7 +430,7 @@ namespace cs296
 				b2BodyDef *bd2 = new b2BodyDef;
 				
 				bd2->type = b2_dynamicBody;
-				bd2->position.Set(x+10.0f,y-9.0f);
+        bd2->position.Set(x-7.5f,y-8.0f);
 				bs11.SetAsBox(10,0.2);
 				fd1->shape = &bs11;
 				b2Body* plank = m_world->CreateBody(bd2);
@@ -443,6 +443,21 @@ namespace cs296
 				(b2DistanceJoint*)m_world->CreateJoint(&jointDef);
 				
 				m_world->CreateJoint(&jointDef);
+        
+        //Rod below it
+        b2BodyDef *bd3 = new b2BodyDef;
+        
+        bd3->type = b2_dynamicBody;
+        bd3->position.Set(x+2,y-17.0f);
+  			b2PolygonShape bs12;
+        bs12.SetAsBox(0.1,y-1.4);
+        b2FixtureDef *fd4 = new b2FixtureDef;
+        fd4->friction = 0.8;
+        fd4->density = 10.0;
+        fd4->shape = &bs12;
+        b2Body* rod = m_world->CreateBody(bd3);
+        rod->CreateFixture(fd4);
+        
 			}
 		}
     //Ground
