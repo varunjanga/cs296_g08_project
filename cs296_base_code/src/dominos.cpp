@@ -380,6 +380,50 @@ namespace cs296
       }
     }
 
+    //Hammer
+    {
+      float hammer_x = -0.1,
+            hammer_y= 18.5f  ,
+            hammer_length = 2.5;
+
+      b2BodyDef bd;
+      bd.position.Set(hammer_x, hammer_length +hammer_y);
+      bd.type = b2_dynamicBody;
+      
+      b2Body* body = m_world->CreateBody(&bd);
+      
+      //hammer part 1
+      b2PolygonShape shape;
+      shape.SetAsBox(0.2f,hammer_length);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 5.0f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body->CreateFixture(fd);
+
+      //hammer part 2
+      b2PolygonShape shape2;
+      shape2.SetAsBox(2.0f,0.5f,b2Vec2(-0.1f,hammer_length + 0.7f),0);//TODO
+      b2FixtureDef *fd2 = new b2FixtureDef;
+      fd2->density = 20.f;
+      fd2->shape = new b2PolygonShape;
+      fd2->shape = &shape2;
+      body->CreateFixture(fd2);
+
+      b2BodyDef ibd;
+      ibd.position.Set(hammer_x, hammer_y);
+      b2Body* invi_body = m_world->CreateBody(&ibd);
+      
+      //Rotation of the hammer
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = body;
+      jointDef.bodyB = invi_body;
+      jointDef.localAnchorA.Set(0,-3.f);
+      jointDef.localAnchorB.Set(0,0);
+      jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+    }
+
 	 	x=-20.0f,y=10.0f;
 		//Swing
 		{
