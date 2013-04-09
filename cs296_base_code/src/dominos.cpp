@@ -716,7 +716,46 @@ namespace cs296
           body->CreateFixture(fd);
         }
       }
+
+			//Oscillating balls
+			{
+				float pos_x=6.5f+bottom_x,pos_y=ground_y + 26.7,thrd_len=10.3f;
+				b2Body* spherebody;
+
+				b2CircleShape circle;
+				circle.m_radius = 0.5;
+
+				b2FixtureDef ballfd;
+				ballfd.shape = &circle;
+				ballfd.density = 1.0f;
+				ballfd.friction = 0.0f;
+				ballfd.restitution = 1.0f;
+				for (int i = 0; i < 4; ++i){
+					b2BodyDef ballbd;
+					ballbd.type = b2_dynamicBody;
+					float pos_x1 = pos_x + i*(2*circle.m_radius + 0.02f);
+					ballbd.position.Set(pos_x1 , pos_y);
+					spherebody = m_world->CreateBody(&ballbd);
+					spherebody->CreateFixture(&ballfd);
+
+					b2Body* b4;
+					{
+						b2BodyDef bd;
+						bd.position.Set(pos_x1,pos_y + thrd_len);
+						b4 = m_world->CreateBody(&bd);
+					}
+
+					b2RevoluteJointDef jd;
+					b2Vec2 anchor;
+					anchor.Set(pos_x1, pos_y+thrd_len);
+					jd.Initialize(spherebody, b4, anchor);
+					m_world->CreateJoint(&jd);     
+				}
+			}
+
 		}
+		
+		
 
     
     
