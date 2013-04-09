@@ -489,6 +489,20 @@ namespace cs296
 			}
 		}
 
+    //Inclined plank
+    {
+      b2BodyDef bd;
+      b2Body* body;
+
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 8.0f, b2Vec2(-44,7), b2_pi/3);
+    
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      body = m_world->CreateBody(&bd);
+      body->CreateFixture(&fd);
+    }
+
     /*
     //Ground
     b2Body* b1;
