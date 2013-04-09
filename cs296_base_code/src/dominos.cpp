@@ -46,25 +46,25 @@ namespace cs296
 
     //Floor-0
     {
-      b2Body* f;
+      b2Body* floor;
       b2EdgeShape shape;
-      shape.Set(b2Vec2(-50.0f, 30.0f), b2Vec2(25.0f, 30.0f));
+      shape.Set(b2Vec2(-50.0f, 30.0f), b2Vec2(26.0f, 30.0f));
 
       b2BodyDef bd;
-      f = m_world->CreateBody(&bd);
-      f->CreateFixture(&shape, 0.0f);
-      f0 = f;
+      floor = m_world->CreateBody(&bd);
+      floor->CreateFixture(&shape, 0.0f);
+      f0 = floor;
     }
     
     //Floor-1
     {
-      b2Body* f;
+      b2Body* floor;
       b2EdgeShape shape;
-      shape.Set(b2Vec2(0.0f, 20.0f), b2Vec2(50.0f, 20.0f));
+      shape.Set(b2Vec2(0.0f, 18.5f), b2Vec2(50.0f, 18.5f));
 
       b2BodyDef bd;
-      f = m_world->CreateBody(&bd);
-      f->CreateFixture(&shape, 0.0f);
+      floor = m_world->CreateBody(&bd);
+      floor->CreateFixture(&shape, 0.0f);
     }
 
     //Falling Box
@@ -74,10 +74,10 @@ namespace cs296
       
       b2FixtureDef fd;
       fd.shape = &shape;
-      fd.density = 1000.0f;
+      fd.density = 100000.0f;
 
       b2BodyDef bd;
-      bd.position.Set(-35.0f, 50.0f);
+      bd.position.Set(-35.0f, 40.0f);
       bd.type = b2_dynamicBody;
       b2Body* body = m_world->CreateBody(&bd);
       body->CreateFixture(&fd);
@@ -336,9 +336,9 @@ namespace cs296
       b2BodyDef bd;
       b2Body* f;
       float x = 4.0f;
-      float y = 20.0f;
-      float x_offset = 2.0f;
-      float y_offset = 2.0f;
+      float y = 18.5f;
+      float x_offset = 3.0f;
+      float y_offset = 1.0f;
       float x1[7] = {x,x,x+x_offset,x+x_offset,x+2*x_offset,x+2*x_offset,x+3*x_offset};
       float y1[7] = {y,y+y_offset,y+y_offset,y+2*y_offset,y+2*y_offset,y+y_offset,y+y_offset};
       float x2[7] = {x,x+x_offset,x+x_offset,x+2*x_offset,x+2*x_offset,x+3*x_offset,x+3*x_offset};
@@ -356,10 +356,10 @@ namespace cs296
       b2BodyDef bd;
       b2Body* body;
       float len = 2.0f;
-      float x1 = 3.0f;
-      float y1 = 22.0f;
-      float x_offset = 2.0f;
-      float y_offset = 2.0f;
+      float x1 = 2.5f;
+      float y1 = 20.5f;
+      float x_offset = 3.0f;
+      float y_offset = 1.0f;
       float x[5] = {x1,x1+x_offset,x1+2*x_offset,x1+3*x_offset,x1+4*x_offset};
       float y[5] = {y1,y1+y_offset,y1+2*y_offset,y1+y_offset,y1};
 
