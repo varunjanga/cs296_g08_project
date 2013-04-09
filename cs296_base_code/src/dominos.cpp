@@ -394,6 +394,111 @@ namespace cs296
       m_world->CreateJoint(&jointDef);
     }
   }
+ //rotating plank 1
+  {
+    b2BodyDef *bd = new b2BodyDef; 
+    bd->type = b2_dynamicBody;
+    bd->position.Set(x-10.0f,y+7.0f);
+    b2FixtureDef *fd1 = new b2FixtureDef;
+    fd1->density = 1.5;
+    fd1->friction = 0.5;
+    fd1->restitution = 0.f;
+    fd1->shape = new b2PolygonShape;
+    b2PolygonShape bs1;
+    bs1.SetAsBox(12,0.2, b2Vec2(0.0f,0.0f), 0);
+    fd1->shape = &bs1;
+    b2FixtureDef *fd2 = new b2FixtureDef;
+    fd2->density = 10.0;
+    fd2->friction = 0.5;
+    fd2->restitution = 0.f;
+    fd2->shape = new b2PolygonShape;
+    b2PolygonShape bs2;
+    bs2.SetAsBox(0.2,1, b2Vec2(11.0f,1.0f), 0);
+    fd2->shape = &bs2;
+    
+
+    b2Body* box1 = m_world->CreateBody(bd);
+    box1->CreateFixture(fd1);
+    box1->CreateFixture(fd2);
+
+    b2PolygonShape shape2;
+    shape2.SetAsBox(0.2f, 2.0f);
+    b2BodyDef bd2;
+    bd2.position.Set(x-10.0f, y+7.5f);
+    b2Body* body2 = m_world->CreateBody(&bd2);
+                           
+    //Joint for rotating two bodies
+    b2RevoluteJointDef jointDef;
+    jointDef.bodyA = box1;
+    jointDef.bodyB = body2;
+    jointDef.localAnchorA.Set(0,0);
+    jointDef.localAnchorB.Set(0.0f,0.0f);
+    // jointDef.collideConnected = false;
+    m_world->CreateJoint(&jointDef);
+  }
+
+  //rotating plank 2
+  {
+    b2BodyDef *bd = new b2BodyDef; 
+    bd->type = b2_dynamicBody;
+    bd->position.Set(x+10.0f,y+3.0f);
+    b2FixtureDef *fd1 = new b2FixtureDef;
+    fd1->density = 1.0;
+    fd1->friction = 0.5;
+    fd1->restitution = 0.f;
+    fd1->shape = new b2PolygonShape;
+    b2PolygonShape bs1;
+    bs1.SetAsBox(12,0.2);
+    fd1->shape = &bs1;
+    b2FixtureDef *fd2 = new b2FixtureDef;
+    fd2->density = 1.0;
+    fd2->friction = 0.5;
+    fd2->restitution = 0.f;
+    fd2->shape = new b2PolygonShape;
+    b2PolygonShape bs2;
+    bs2.SetAsBox(0.2,1, b2Vec2(-11.0f,1.0f), 0);
+    fd2->shape = &bs2;
+    
+
+    b2Body* box1 = m_world->CreateBody(bd);
+    box1->CreateFixture(fd1);
+    box1->CreateFixture(fd2);
+
+    b2PolygonShape shape2;
+    shape2.SetAsBox(0.2f, 2.0f);
+    b2BodyDef bd2;
+    bd2.position.Set(x+10.0f, y+3.5f);
+    b2Body* body2 = m_world->CreateBody(&bd2);
+                           
+    //Joint for rotating two bodies
+    b2RevoluteJointDef jointDef;
+    jointDef.bodyA = box1;
+    jointDef.bodyB = body2;
+    jointDef.localAnchorA.Set(0,0);
+    jointDef.localAnchorB.Set(0.0f,0.0f);
+    m_world->CreateJoint(&jointDef);
+  }
+
+  //Balls on the rotating planks
+  {
+    b2Body* spherebody;
+
+    b2CircleShape circle[2];
+    circle[0].m_radius = 1;
+    circle[1].m_radius = 2;
+
+    b2FixtureDef ballfd;
+    b2BodyDef ballbd;
+    ballbd.type = b2_dynamicBody;
+
+    for (int i = 0; i < 2; i++){
+      ballfd.shape = &circle[i];
+      ballfd.density = 10.0f + i*5.0f;
+      ballbd.position.Set(x-i,y+4+5*i);
+      spherebody = m_world->CreateBody(&ballbd);
+      spherebody->CreateFixture(&ballfd);
+    }
+  }
     /*
     //Ground
     b2Body* b1;
