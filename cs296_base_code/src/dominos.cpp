@@ -471,6 +471,79 @@ namespace cs296
       b1->CreateFixture(&shape, 0.0f);
     }
 		
+    //funnel
+    {
+		  float shift_x = -0,shift_y=-0.5;
+      b2BodyDef bd;
+      b2Body* f;
+      for(int i = 0; i < 2; i++){
+        b2EdgeShape shape;
+        shape.Set(b2Vec2(shift_x+5.1*i-0.1 , shift_y-5), b2Vec2(shift_x+5.1*i-0.1,shift_y+ -10.0f));
+        f = m_world->CreateBody(&bd);
+        f->CreateFixture(&shape, 0.0f);
+      }
+      //left inclined incline
+      {
+        b2EdgeShape shape;
+        shape.Set(b2Vec2(shift_x-0.1,shift_y+ -5), b2Vec2(shift_x - 5.9 , shift_y+0.0f));
+        f = m_world->CreateBody(&bd);
+        f->CreateFixture(&shape, 0.0f);
+      }
+      //right inclined incline
+      {
+        b2EdgeShape shape;
+        shape.Set(b2Vec2(shift_x+5.0,shift_y+ -5), b2Vec2(shift_x+18.1 +1.31, shift_y+6.0+1.1));// 13.1  , 11*0.1
+        f = m_world->CreateBody(&bd);
+        f->CreateFixture(&shape, 0.0f);
+      }
+    }
+   
+    //rotating plank  below funnel
+    {
+      float x=7;
+      b2BodyDef *bd = new b2BodyDef; 
+      bd->type = b2_dynamicBody;
+      //bd->angle=-b2_pi/6;
+      bd->position.Set(x,-15.0f);
+      b2FixtureDef *fd1 = new b2FixtureDef;
+      fd1->density = 1.5;
+      fd1->friction = 0.5;
+      fd1->restitution = 0.f;
+      fd1->shape = new b2PolygonShape;
+      b2PolygonShape bs1;
+      bs1.SetAsBox(9,0.2, b2Vec2(0.0f,0.0f), 0);
+      fd1->shape = &bs1;
+      b2FixtureDef *fd2 = new b2FixtureDef;
+      fd2->density = 30.0;
+      fd2->friction = 0.5;
+      fd2->restitution = 0.f;
+      fd2->shape = new b2PolygonShape;
+      b2PolygonShape bs2;
+      bs2.SetAsBox(0.2,1, b2Vec2(9.0f,1.0f), -.5);
+      fd2->shape = &bs2;
+
+
+      b2Body* box1 = m_world->CreateBody(bd);
+      box1->CreateFixture(fd1);
+      box1->CreateFixture(fd2);
+
+      b2PolygonShape shape2;
+      shape2.SetAsBox(0.2f, 2.0f);
+      b2BodyDef bd2;
+      bd2.position.Set(x,-15.0f);
+      b2Body* body2 = m_world->CreateBody(&bd2);
+                             
+      //Joint for rotating two bodies
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = box1;
+      jointDef.bodyB = body2;
+      jointDef.localAnchorA.Set(-3,0);
+      jointDef.localAnchorB.Set(0.0f,0.0f);
+      // jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+
+    }
+
     //Swastik
     {
       //Horizontal Rod
@@ -767,13 +840,9 @@ namespace cs296
 					m_world->CreateJoint(&jd);     
 				}
 			}
-
 		}
 		
-		
-
-    
-    
+		    
   }
   
   
