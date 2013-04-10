@@ -113,6 +113,24 @@ namespace cs296
       body->ResetMassData();
     }
 
+    /*! \b Spring \b System
+    * - \c b2Body* fl_rod
+    *   - \c fl_rod : the body representing the flat rod on the criss-cross system
+    * - \c b2Body* inc_rod[4][2]
+    *   - \c inc_rod[4][2] : matrix of 8 rods forming the criss-cross system
+    *   - for a given first component, the obtained two rods form a cross
+    * - \c b2Body* box
+    *   - \c box : the body representing the punching box attached to the criss-crosses
+    * - \c b2PolygonShape shape
+    *   - \c shape : Its a rectangle with dimension 0.1x8
+    * - \c b2BodyDef bd
+    *   - \c bd defines a body in the world.The world position of the body is set to (-35,40)
+    *   - \c bd.type is set to \c b2_dynamicBody, so that it acts as a rigid body
+    * - \c b2FixtureDef fd
+    *   - \c fd.density : its desity is set to 20 units
+    *   - \c fd.shape : set to the shape described above
+    *   - \c the same fixtureDef is used for all the bodies in the system
+    */
     //Spring System
     {
       b2Body* fl_rod, *inc_rod[4][2];
@@ -125,6 +143,15 @@ namespace cs296
       fd.shape = &shape;
       fd.density = 20.0f;
 
+    /*!   \b Flat \b Rod
+    *   - \c b2BodyDef bd
+    *     - \c bd defines a body in the world.The world position of the first rod is set to (-35,35)
+    *     - \c bd.angle : set to pi/2 i.e parallel to ground
+    *     - \c bd.type is set to \c b2_dynamicBody, so that it acts as a rigid body
+    *   - \c b2Body* body
+    *     - \c body : body representing the rod on the criss-cross
+    *   - At the end, the fixture is attached to the body
+    */
       //flat rod
       {
         b2BodyDef bd;
@@ -141,6 +168,18 @@ namespace cs296
       fd.shape = &shape;
       fd.density = 20.0f;
       
+    /*!   \b Inclined \b Rods
+    *   - \c b2BodyDef bd
+    *     - \c bd defines a body in the world.The world position of the first rod is set to (-38.5,32.6)
+    *     - There after the x-coordinate is incremented by 3 units each time
+    *     - \c bd.angle : set to pi/6 for half and -pi/6 for the other half
+    *     - \c bd.type is set to \c b2_dynamicBody, so that it acts as a rigid body
+    *   - \c b2Body* body
+    *     - \c body : body representing the each rod forming the criss-cross
+    *   - At the end, the fixture is attached to the body
+    *   - Inter-joints are made using \c b2RevoluteJoint.
+    *   - The criss-cross system is fixed to ground at the left-most point using \c b2DistanceJoint
+    */
       //inclined rods
       for (int i = 0; i < 4; ++i){
         for (int j = 0; j < 2; ++j){
@@ -154,6 +193,19 @@ namespace cs296
         }
       }
       
+    /*!   \b Punching \b Box
+    *   - \c b2PolygonShape shape
+    *     - \c shape : Its a rectangle with dimension 2*2.5
+    *   - \c b2BodyDef bd
+    *     - \c bd defines a body in the world.The world position of the body is set to (-22.7,32.6)
+    *     - \c bd.type is set to \c b2_dynamicBody, so that it acts as a rigid body
+    *   - \c b2FixtureDef fd
+    *     - \c fd.density : its desity is set to 20 units
+    *     - \c fd.shape : set to the shape described above
+    *   - \c b2Body* body
+    *     - \c body : body representing the puncher
+    *   - The box is attached to the criss-cross system using \c b2DistanceJoint
+    */
       //Punching Box
       {
         b2PolygonShape shape;
@@ -168,7 +220,6 @@ namespace cs296
         bd.type = b2_dynamicBody;
         b2Body* body = m_world->CreateBody(&bd);
         body->CreateFixture(&fd);
-        //body->ResetMassData
         box = body;
       }
       
@@ -259,7 +310,7 @@ namespace cs296
       b2BodyDef bd;
       b2Body* b1;
 
-    /*! \b Roll-1
+    /*!   \b Roll-1
     *   - Centered at (0,40)
     *   - Starts at the SE point and goes till the SW point    
     */
@@ -272,7 +323,7 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
-    /*! \b Roll-2
+    /*!   \b Roll-2
     *   - Centered at (15,40)
     *   - Starts at the right-most point and goes till the bottom-most point    
     */
@@ -285,7 +336,7 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
-    /*! \b Ramp-1
+    /*!   \b Ramp-1
     *   - Centered at (-4.3,35)
     *   - Starts at the bottom-most point and goes till i=36
     */
@@ -298,7 +349,7 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
-    /*! \b Ramp-2
+    /*!   \b Ramp-2
     *   - Centered at (4.1,35)
     *   - Starts at i=24 and goes till the bottom-most point
     */
@@ -311,7 +362,7 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
-    /*! \b Ramp-3
+    /*!   \b Ramp-3
     *   - Centered at (13.6,35)
     *   - Starts at the bottom-most point and goes till i=39, i.e. almost the right-most point
     */
