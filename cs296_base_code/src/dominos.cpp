@@ -237,12 +237,32 @@ namespace cs296
       sbody->CreateFixture(&ballfd);
     }
 
+    /*! \b Circular \b Paths
+    * - \c b2EdgeShape shape
+    *   - \c shape : Its an edge of varies initial and ending points
+    *                so that we get a circular arc
+    * - \c int i 
+    *   - \c i : The circe starts from the right-most end at i=0 going anti-clockwise
+    * - \c float x,y
+    *   - \c (x,y) : center of the circle of which the arc is a part
+    * - \c float r
+    *   - \c r : radius of the arc and is equal to 5 units for all the paths
+    * - \c b2BodyDef bd
+    *   - \c ballbd is a bodydef with default properties here.
+    * - \c b2Body b1
+    *   - \c b1 is a body representing each and every edge used to form the arcs
+    * - A complete circle is formed by 40 such edges
+    */
     //Circular-Paths
     {
       b2EdgeShape shape;
       b2BodyDef bd;
       b2Body* b1;
 
+    /*! \b Roll-1
+    *   - Centered at (0,40)
+    *   - Starts at the SE point and goes till the SW point    
+    */
       float x = 0.0f,y=40.0f,r=5.0f;
       //Roll-1
       for (int i = -5; i < 25; ++i)
@@ -252,6 +272,10 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
+    /*! \b Roll-2
+    *   - Centered at (15,40)
+    *   - Starts at the right-most point and goes till the bottom-most point    
+    */
       x = 15.0f;
       //Roll-2
       for (int i = 0; i < 30; ++i)
@@ -261,6 +285,10 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
+    /*! \b Ramp-1
+    *   - Centered at (-4.3,35)
+    *   - Starts at the bottom-most point and goes till i=36
+    */
       x = -4.3f;y = 35.0f;
       //Ramp-1
       for (int i = 30; i < 36; ++i)
@@ -270,6 +298,10 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
+    /*! \b Ramp-2
+    *   - Centered at (4.1,35)
+    *   - Starts at i=24 and goes till the bottom-most point
+    */
       x = 4.1f;
       //Ramp-2
       for (int i = 24; i < 30; ++i)
@@ -279,7 +311,11 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
-      x = 13.6f;y = 35.0f;
+    /*! \b Ramp-3
+    *   - Centered at (13.6,35)
+    *   - Starts at the bottom-most point and goes till i=39, i.e. almost the right-most point
+    */
+      x = 13.6f;
       //Ramp-3
       for (int i = 30; i < 39; ++i)
       {
