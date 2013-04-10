@@ -46,29 +46,58 @@ namespace cs296
 		float ground_y= -17.0f;
     float bottom_x = 30.0f;
 
+    /*! \b Floor-0
+    * - \c b2Body* floor
+    *     - \c floor: its a rigid body pointer which will represent the top floor.
+    * - \c b2PolygonShape shape
+    *     - \c shape : to set shape to the ground. Its an edge starting at (-50,30) to (26,30).  
+    * - \c b2BodyDef bd
+    *     - \c bd: defines a new body property set with default variables
+    * - Setting density to 0 and not making it a dynamic body makes it immovable.
+    */
     //Floor-0
     {
-      b2Body* f;
+      b2Body* floor;
       b2EdgeShape shape;
-      shape.Set(b2Vec2(-50.0f, 30.0f), b2Vec2(25.0f, 30.0f));
+      shape.Set(b2Vec2(-50.0f, 30.0f), b2Vec2(26.0f, 30.0f));
 
       b2BodyDef bd;
-      f = m_world->CreateBody(&bd);
-      f->CreateFixture(&shape, 0.0f);
-      f0 = f;
+      floor = m_world->CreateBody(&bd);
+      floor->CreateFixture(&shape, 0.0f);
+      f0 = floor;
     }
     
+    /*! \b Floor-1
+    * - \c b2Body* floor
+    *     - \c floor: its a rigid body pointer which will represent the second floor.
+    * - \c b2PolygonShape shape
+    *     - \c shape : to set shape to the ground. Its an edge starting at (0,18.5) to (50,18.5).  
+    * - \c b2BodyDef bd
+    *     - \c bd: defines a new body property set with default variables
+    * - Setting density to 0 and not making it a dynamic body makes it immovable. 
+    */
     //Floor-1
     {
-      b2Body* f;
+      b2Body* floor;
       b2EdgeShape shape;
-      shape.Set(b2Vec2(0.0f, 20.0f), b2Vec2(50.0f, 20.0f));
+      shape.Set(b2Vec2(0.0f, 18.5f), b2Vec2(50.0f, 18.5f));
 
       b2BodyDef bd;
-      f = m_world->CreateBody(&bd);
-      f->CreateFixture(&shape, 0.0f);
+      floor = m_world->CreateBody(&bd);
+      floor->CreateFixture(&shape, 0.0f);
     }
 
+    /*! \b Falling \b Box
+    * - \c b2PolygonShape shape
+    *   - \c shape : Its a square with dimension 2*2
+    * - \c b2BodyDef bd
+    *   - \c bd defines a body in the world.The world position of the body is set to (-35,40)
+    *   - \c bd.type is set to \c b2_dynamicBody, so that it acts as a rigid body
+    * - \c b2FixtureDef fd
+    *   - \c fd.density : its desity is set to 100000 units, high enough to make the spring compress
+    * - At the end, the fixture is attached to the body
+    * - \c ResetMassData() for resetting the mass from defaults to 100000
+    */
     //Falling Box
     {
       b2PolygonShape shape;
@@ -76,16 +105,34 @@ namespace cs296
       
       b2FixtureDef fd;
       fd.shape = &shape;
-      fd.density = 1000.0f;
+      fd.density = 100000.0f;
 
       b2BodyDef bd;
-      bd.position.Set(-35.0f, 50.0f);
+      bd.position.Set(-35.0f, 40.0f);
       bd.type = b2_dynamicBody;
       b2Body* body = m_world->CreateBody(&bd);
       body->CreateFixture(&fd);
       body->ResetMassData();
     }
 
+    /*! \b Spring \b System
+    * - \c b2Body* fl_rod
+    *   - \c fl_rod : the body representing the flat rod on the criss-cross system
+    * - \c b2Body* inc_rod[4][2]
+    *   - \c inc_rod[4][2] : matrix of 8 rods forming the criss-cross system
+    *   - for a given first component, the obtained two rods form a cross
+    * - \c b2Body* box
+    *   - \c box : the body representing the punching box attached to the criss-crosses
+    * - \c b2PolygonShape shape
+    *   - \c shape : Its a rectangle with dimension 0.1x8
+    * - \c b2BodyDef bd
+    *   - \c bd defines a body in the world.The world position of the body is set to (-35,40)
+    *   - \c bd.type is set to \c b2_dynamicBody, so that it acts as a rigid body
+    * - \c b2FixtureDef fd
+    *   - \c fd.density : its desity is set to 20 units
+    *   - \c fd.shape : set to the shape described above
+    *   - \c the same fixtureDef is used for all the bodies in the system
+    */
     //Spring System
     {
       b2Body* fl_rod, *inc_rod[4][2];
@@ -98,6 +145,15 @@ namespace cs296
       fd.shape = &shape;
       fd.density = 20.0f;
 
+    /*!   \b Flat \b Rod
+    *   - \c b2BodyDef bd
+    *     - \c bd defines a body in the world.The world position of the first rod is set to (-35,35)
+    *     - \c bd.angle : set to pi/2 i.e parallel to ground
+    *     - \c bd.type is set to \c b2_dynamicBody, so that it acts as a rigid body
+    *   - \c b2Body* body
+    *     - \c body : body representing the rod on the criss-cross
+    *   - At the end, the fixture is attached to the body
+    */
       //flat rod
       {
         b2BodyDef bd;
@@ -114,6 +170,18 @@ namespace cs296
       fd.shape = &shape;
       fd.density = 20.0f;
       
+    /*!   \b Inclined \b Rods
+    *   - \c b2BodyDef bd
+    *     - \c bd defines a body in the world.The world position of the first rod is set to (-38.5,32.6)
+    *     - There after the x-coordinate is incremented by 3 units each time
+    *     - \c bd.angle : set to pi/6 for half and -pi/6 for the other half
+    *     - \c bd.type is set to \c b2_dynamicBody, so that it acts as a rigid body
+    *   - \c b2Body* body
+    *     - \c body : body representing the each rod forming the criss-cross
+    *   - At the end, the fixture is attached to the body
+    *   - Inter-joints are made using \c b2RevoluteJoint.
+    *   - The criss-cross system is fixed to ground at the left-most point using \c b2DistanceJoint
+    */
       //inclined rods
       for (int i = 0; i < 4; ++i){
         for (int j = 0; j < 2; ++j){
@@ -127,6 +195,19 @@ namespace cs296
         }
       }
       
+    /*!   \b Punching \b Box
+    *   - \c b2PolygonShape shape
+    *     - \c shape : Its a rectangle with dimension 2*2.5
+    *   - \c b2BodyDef bd
+    *     - \c bd defines a body in the world.The world position of the body is set to (-22.7,32.6)
+    *     - \c bd.type is set to \c b2_dynamicBody, so that it acts as a rigid body
+    *   - \c b2FixtureDef fd
+    *     - \c fd.density : its desity is set to 20 units
+    *     - \c fd.shape : set to the shape described above
+    *   - \c b2Body* body
+    *     - \c body : body representing the puncher
+    *   - The box is attached to the criss-cross system using \c b2DistanceJoint
+    */
       //Punching Box
       {
         b2PolygonShape shape;
@@ -141,7 +222,6 @@ namespace cs296
         bd.type = b2_dynamicBody;
         b2Body* body = m_world->CreateBody(&bd);
         body->CreateFixture(&fd);
-        //body->ResetMassData
         box = body;
       }
       
@@ -178,6 +258,20 @@ namespace cs296
       (b2DistanceJoint*)m_world->CreateJoint(&distDef);
     }
 
+    /*! \b Ball-1
+    * - \c b2Body* sbody
+    *   - \c sbody : body representing the first ball being hit by the puncher
+    * - \c b2CircleShape circle
+    *   - \c circle : Its a circle of radius 1
+    * - \c b2BodyDef ballbd
+    *   - \c ballbd defines a body in the world.The world position of the body is set to (-15,31)
+    *   - \c ballbd.type is set to \c b2_dynamicBody, so that it acts as a rigid body
+    * - \c b2FixtureDef ballfd
+    *   - \c ballfd.density : its desity is set to 4 units
+    *   - \c ballfd.restitution : set to 0, so does not bounce.
+    *   - \c ballfd.friction : set to 0, so is smooth.
+    * - At the end, the fixture is attached to the body
+    */
     //Ball-1
     {
       b2Body* sbody;
@@ -196,12 +290,32 @@ namespace cs296
       sbody->CreateFixture(&ballfd);
     }
 
+    /*! \b Circular \b Paths
+    * - \c b2EdgeShape shape
+    *   - \c shape : Its an edge of varies initial and ending points
+    *                so that we get a circular arc
+    * - \c int i 
+    *   - \c i : The circe starts from the right-most end at i=0 going anti-clockwise
+    * - \c float x,y
+    *   - \c (x,y) : center of the circle of which the arc is a part
+    * - \c float r
+    *   - \c r : radius of the arc and is equal to 5 units for all the paths
+    * - \c b2BodyDef bd
+    *   - \c ballbd is a bodydef with default properties here.
+    * - \c b2Body b1
+    *   - \c b1 is a body representing each and every edge used to form the arcs
+    * - A complete circle is formed by 40 such edges
+    */
     //Circular-Paths
     {
       b2EdgeShape shape;
       b2BodyDef bd;
       b2Body* b1;
 
+    /*!   \b Roll-1
+    *   - Centered at (0,40)
+    *   - Starts at the SE point and goes till the SW point    
+    */
       float x = 0.0f,y=40.0f,r=5.0f;
       //Roll-1
       for (int i = -5; i < 25; ++i)
@@ -211,6 +325,10 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
+    /*!   \b Roll-2
+    *   - Centered at (15,40)
+    *   - Starts at the right-most point and goes till the bottom-most point    
+    */
       x = 15.0f;
       //Roll-2
       for (int i = 0; i < 30; ++i)
@@ -220,6 +338,10 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
+    /*!   \b Ramp-1
+    *   - Centered at (-4.3,35)
+    *   - Starts at the bottom-most point and goes till i=36
+    */
       x = -4.3f;y = 35.0f;
       //Ramp-1
       for (int i = 30; i < 36; ++i)
@@ -229,6 +351,10 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
+    /*!   \b Ramp-2
+    *   - Centered at (4.1,35)
+    *   - Starts at i=24 and goes till the bottom-most point
+    */
       x = 4.1f;
       //Ramp-2
       for (int i = 24; i < 30; ++i)
@@ -238,7 +364,11 @@ namespace cs296
         b1->CreateFixture(&shape, 0.0f);
       }
 
-      x = 13.6f;y = 35.0f;
+    /*!   \b Ramp-3
+    *   - Centered at (13.6,35)
+    *   - Starts at the bottom-most point and goes till i=39, i.e. almost the right-most point
+    */
+      x = 13.6f;
       //Ramp-3
       for (int i = 30; i < 39; ++i)
       {
@@ -333,14 +463,31 @@ namespace cs296
       m_world->CreateJoint(&jointDef);
     }
 
+    /*! \b Stairs
+    * - \c b2BodyDef bd
+    *   - \c bd defines a body in the world.
+    * - \c b2Body* f
+    *   - \c f : represents the actual edge body in the world
+    * - The stairs are formed by a total of 7 edge shaped bodies
+    * - \c float x
+    *   - \c x : the initial x-coordinate of the edges
+    * - \c float y
+    *   - \c y : the initial y-coordinate of the edges
+    * - \c float x_offset
+    *   - \c x_offset : the horizontal offset between two consecutive edges
+    * - \c float y_offset
+    *   - \c y_offset : the vertical offset between two consecutive edges
+    * - \c float x1[7], x2[7], y1[7], y2[7] 
+    *   - Each edge starts at (x1[i], y1[i]) and ends at (x2[i], y2[i])
+    */
     //Stairs
     {
       b2BodyDef bd;
       b2Body* f;
       float x = 4.0f;
-      float y = 20.0f;
-      float x_offset = 2.0f;
-      float y_offset = 2.0f;
+      float y = 18.5f;
+      float x_offset = 3.0f;
+      float y_offset = 1.0f;
       float x1[7] = {x,x,x+x_offset,x+x_offset,x+2*x_offset,x+2*x_offset,x+3*x_offset};
       float y1[7] = {y,y+y_offset,y+y_offset,y+2*y_offset,y+2*y_offset,y+y_offset,y+y_offset};
       float x2[7] = {x,x+x_offset,x+x_offset,x+2*x_offset,x+2*x_offset,x+3*x_offset,x+3*x_offset};
@@ -353,15 +500,36 @@ namespace cs296
       }
     }
 
-    //dominoes
+    /*! \b Dominos
+    * - \c b2BodyDef bd
+    *   - \c bd defines a body in the world.
+    *   - \c bd.type : set to b2_dynamicbody to make the domino a rigid body
+    * - \c b2Body* body
+    *   - \c body : represents the actual domino in the world
+    * - \c float x1
+    *   - \c x1 : the initial x-coordinate of the dominos
+    * - \c float y1
+    *   - \c y1 : the initial y-coordinate of the dominos
+    * - \c float x_offset
+    *   - \c x_offset : the horizontal offset between two consecutive dominos
+    * - \c float y_offset
+    *   - \c y_offset : the vertical offset between two consecutive dominos
+    * - \c float x[5], y[5] 
+    *   - Each domino' position is set to (x[i], y[i]) using \c bd.position.Set()
+    * - \c b2PolygonShape shape
+    *   - \c shape : It's a rectangle with dimension 0.1x2
+    * - \c b2FixtureDef fd
+    *   - \c fd.density : its desity is set to 35 units and friction is set to 0.1
+    */
+    //dominos
     {
       b2BodyDef bd;
       b2Body* body;
       float len = 2.0f;
-      float x1 = 3.0f;
-      float y1 = 22.0f;
-      float x_offset = 2.0f;
-      float y_offset = 2.0f;
+      float x1 = 2.5f;
+      float y1 = 20.5f;
+      float x_offset = 3.0f;
+      float y_offset = 1.0f;
       float x[5] = {x1,x1+x_offset,x1+2*x_offset,x1+3*x_offset,x1+4*x_offset};
       float y[5] = {y1,y1+y_offset,y1+2*y_offset,y1+y_offset,y1};
 
@@ -613,6 +781,49 @@ namespace cs296
       jointDef.collideConnected = false;
       m_world->CreateJoint(&jointDef);
     }
+    //Hammer
+    {
+      float hammer_x = -0.1,
+            hammer_y= 18.5f  ,
+            hammer_length = 2.5;
+
+      b2BodyDef bd;
+      bd.position.Set(hammer_x, hammer_length +hammer_y);
+      bd.type = b2_dynamicBody;
+      
+      b2Body* body = m_world->CreateBody(&bd);
+      
+      //hammer part 1
+      b2PolygonShape shape;
+      shape.SetAsBox(0.2f,hammer_length);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 5.0f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body->CreateFixture(fd);
+
+      //hammer part 2
+      b2PolygonShape shape2;
+      shape2.SetAsBox(2.0f,0.5f,b2Vec2(-0.1f,hammer_length + 0.7f),0);//TODO
+      b2FixtureDef *fd2 = new b2FixtureDef;
+      fd2->density = 20.f;
+      fd2->shape = new b2PolygonShape;
+      fd2->shape = &shape2;
+      body->CreateFixture(fd2);
+
+      b2BodyDef ibd;
+      ibd.position.Set(hammer_x, hammer_y);
+      b2Body* invi_body = m_world->CreateBody(&ibd);
+      
+      //Rotation of the hammer
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = body;
+      jointDef.bodyB = invi_body;
+      jointDef.localAnchorA.Set(0,-3.f);
+      jointDef.localAnchorB.Set(0,0);
+      jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+    }
     
     //Spring2
     {
@@ -807,7 +1018,7 @@ namespace cs296
 
 			//Oscillating balls
 			{
-				float pos_x=6.5f+bottom_x,pos_y=ground_y + 26.7,thrd_len=10.3f;
+				float pos_x=6.5f+bottom_x,pos_y=ground_y + 26.7,thrd_len=8.8f;
 				b2Body* spherebody;
 
 				b2CircleShape circle;
@@ -843,6 +1054,32 @@ namespace cs296
 		}
 		
 		    
+
+    /*! \b Inclined \b Plank
+    * - \c b2Body* body
+    *     - \c body: its a rigid body pointer which will represent the inclined plank.
+    * - \c b2PolygonShape shape
+    *     - \c shape : Its a rectangle with dimensions 0.1*8, 
+    *                                     centered at (-44,7), 
+    *                                     inclined at an angle of pi/3  
+    * - \c b2BodyDef bd
+    *     - \c bd: defines a new body property set with default variables
+    * - \c b2FixtureDef fd
+    *   - \c fd.shape : set to the shape described above
+    */
+    //Inclined plank
+    {
+      b2BodyDef bd;
+      b2Body* body;
+
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 8.0f, b2Vec2(-44,7), b2_pi/3);
+    
+      b2FixtureDef fd;
+      fd.shape = &shape;
+      body = m_world->CreateBody(&bd);
+      body->CreateFixture(&fd);
+    }
   }
   
   
