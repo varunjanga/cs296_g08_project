@@ -417,9 +417,9 @@ namespace cs296
     *   - \c f : represents the actual edge body in the world
     * - The stairs are formed by a total of 7 edge shaped bodies
     * - \c float x
-    *   - \c x : the x-coordinate of the edges
+    *   - \c x : the initial x-coordinate of the edges
     * - \c float y
-    *   - \c y : the y-coordinate of the edges
+    *   - \c y : the initial y-coordinate of the edges
     * - \c float x_offset
     *   - \c x_offset : the horizontal offset between two consecutive edges
     * - \c float y_offset
@@ -447,7 +447,28 @@ namespace cs296
       }
     }
 
-    //dominoes
+    /*! \b Dominos
+    * - \c b2BodyDef bd
+    *   - \c bd defines a body in the world.
+    *   - \c bd.type : set to b2_dynamicbody to make the domino a rigid body
+    * - \c b2Body* body
+    *   - \c body : represents the actual domino in the world
+    * - \c float x1
+    *   - \c x1 : the initial x-coordinate of the dominos
+    * - \c float y1
+    *   - \c y1 : the initial y-coordinate of the dominos
+    * - \c float x_offset
+    *   - \c x_offset : the horizontal offset between two consecutive dominos
+    * - \c float y_offset
+    *   - \c y_offset : the vertical offset between two consecutive dominos
+    * - \c float x[5], y[5] 
+    *   - Each domino' position is set to (x[i], y[i]) using \c bd.position.Set()
+    * - \c b2PolygonShape shape
+    *   - \c shape : It's a rectangle with dimension 0.1x2
+    * - \c b2FixtureDef fd
+    *   - \c fd.density : its desity is set to 35 units and friction is set to 0.1
+    */
+    //dominos
     {
       b2BodyDef bd;
       b2Body* body;
