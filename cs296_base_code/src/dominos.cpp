@@ -606,6 +606,18 @@ namespace cs296
       }
     }
 
+    /*! \b Inclined \b Plank
+    * - \c b2Body* body
+    *     - \c body: its a rigid body pointer which will represent the inclined plank.
+    * - \c b2PolygonShape shape
+    *     - \c shape : Its a rectangle with dimensions 0.1*8, 
+    *                                     centered at (-44,7), 
+    *                                     inclined at an angle of pi/3  
+    * - \c b2BodyDef bd
+    *     - \c bd: defines a new body property set with default variables
+    * - \c b2FixtureDef fd
+    *   - \c fd.shape : set to the shape described above
+    */
     //Inclined plank
     {
       b2BodyDef bd;
