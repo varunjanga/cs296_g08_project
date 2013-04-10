@@ -1,8 +1,20 @@
-To build the base code do the following:
+Group No: 8
 
-1. Go into the external/src folder and read the README there to build Box2D first.
+Group Members:
 
-2. Return back to the cs296_base_code folder and type 'make' to compile.
+-------------------------
+Name             Roll No
+-------------------------
+Janga Varun     110050076
+M Rajeev Kumar  110050052
+Shubham Mehta   110050013
 
-3. Type 'bin/cs296_base' to run the program.
+Declaration:
+------------------------------------------------------------------------
+All the work that we are submitting for this assignment is our own work 
+and we have not plagiarized it from anywhere, although we have used the
+following references:
+
+1)Progit book
+2)More references at http://www.cse.iitb.ac.in/~geniussm/cs296group08/
 
