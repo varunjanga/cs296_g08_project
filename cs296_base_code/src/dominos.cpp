@@ -701,8 +701,6 @@ namespace cs296
         
       }
     }
-
-  }
  //rotating plank 1
   {
     b2BodyDef *bd = new b2BodyDef; 
@@ -1174,8 +1172,6 @@ namespace cs296
         m_world->CreateJoint(&jointDef);
       }
 
- }
-=======
       fd.shape = &shape;
       fd.density = 20.0f;
 
@@ -1366,7 +1362,7 @@ namespace cs296
   }
   
   
->>>>>>> 64feb1de4123440c3e0e8be97870358d3d273bf1
+
 
   sim_t *sim = new sim_t("Dominos", dominos_t::create);
 }
