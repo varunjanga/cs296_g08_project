@@ -289,6 +289,27 @@ namespace cs296
       sbody = m_world->CreateBody(&ballbd);
       sbody->CreateFixture(&ballfd);
     }
+    
+    //Lowest Ball
+    {
+      b2Body* spherebody;
+
+      b2CircleShape circle;
+      circle.m_radius = 1.0f;
+
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 1.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+
+      b2BodyDef ballbd;
+      ballbd.type = b2_dynamicBody;
+      ballbd.position.Set(45.0f, 18.5+2.0f);
+      spherebody = m_world->CreateBody(&ballbd);
+      spherebody->CreateFixture(&ballfd);
+    }
+    
 
     /*! \b Circular \b Paths
     * - \c b2EdgeShape shape
@@ -305,12 +326,8 @@ namespace cs296
     * - \c b2Body b1
     *   - \c b1 is a body representing each and every edge used to form the arcs
     * - A complete circle is formed by 40 such edges
-    * - circular path is formed using parametric equation of circle i.e  
-    *   	\b X \b = \b x \b + \b r*cos(theta)
-    * 		\b Y \b = \b y \b + \b r*sin(theta)
     */
     //Circular-Paths
-	{
     {
       b2EdgeShape shape;
       b2BodyDef bd;
@@ -356,7 +373,7 @@ namespace cs296
       }
 
     /*!   \b Ramp-2
-	*   - Centered at (4.1,35)
+    *   - Centered at (4.1,35)
     *   - Starts at i=24 and goes till the bottom-most point
     */
       x = 4.1f;
@@ -384,43 +401,6 @@ namespace cs296
 
 
     //Pulley
-    /*! \b The \b pulley \b system  
-  	*-  \c x and \c y = Its the centre of the square box relative to which whole pulley system is set.
-  	*/
-  	/*! - \a The \a left \a box
-  	*- \c b2BodyDef *bd
-  	*     - \c bd defines pointer of body in a world.The world position of the body is set to (x,y)
-  	*     - \c bd->fixedRotation is set \c TRUE so that the body can not rotate.
-	*     - \c bd->type is set to b2_dynamicBody.You must set the body type to b2_dynamicBody if you want the body to move in response to forces.
-	*- \c b2FixtureDef *fd1 
-	*     - details of the left box required to set density to set to 10units. and friction is set to .5 and coefficient of restitution is set to 0 so that it won't move coz of collisons.
-	*     - At the end, fixture is attached to box1 and box1 is then attached to the main world 
-	* - \c b2PolygonShape shape2
-	*   - \c shape : Its a square with dimension 2*2
-	*/
-
-	/*! - \a The \a right \a horizonatal \a bar
-	*- \c b2BodyDef *bd
-	*     - \c bd defines pointer of body in a world.The world position of the body is set to (x+6,y-9)
-	*     - \c bd->fixedRotation is set \c TRUE so that the body can not rotate.
-	*     - \c bd->type is set to b2_dynamicBody.You must set the body type to b2_dynamicBody if you want the body to move in response to forces.
-	*- \c b2FixtureDef *fd2
-	*     - details of the left box required to set density to set to 4units. and friction is set to .5 and coefficient of restitution is set to 0 so that it won't move coz of collisons.
-	*     - At the end, fixture is attached to box1 and box1 is then attached to the main world 
-	* - \c b2PolygonShape shape2
-	*   - \c shape : Its a square with dimension 3*.2
-	*/
-
-	/*!
-	* - \c b2RevoluteJointDef jointDef 
-	*     - \c jointDef It is to attach both the bodies the horizontal rotating bar and the vertical hidden fixed bar to a common anchor point so that horizontal bar can rotate about this point.
-	*     - \c jointDef.bodyA = box
-	*     - \c jointDef.bodyB = horizonatal bar
-	*     - \c jointDef.localAnchorA = The local anchor point relative to bodyA's origin. 
-	*     - \c jointDef.localAnchorB = The local anchor point relative to bodyB's origin. 
-	*     - \c collideConnected: Set this flag to true if the attached bodies should collide. 
-	*     - Finally, it is also attached to the world.
-    */
     float x=28.0f,y=37.0f;
     {
       b2BodyDef *bd = new b2BodyDef;
@@ -458,20 +438,6 @@ namespace cs296
       m_world->CreateJoint(myjoint);
     }
     //sphere which act like pulley
-		
-	/*!
-	* \b The \b sphere \b to \b act \b like \b pulley 
-	*    - \c b2Body* spherebody
-	*          - \c spherebody sets the shape as spherically appearing 2d circular body
-	*    - \c b2CircleShape circle
-	*          - \c b2CircleShape is set to a circle with radius 3.
-	*    - \c b2FixtureDef ballfd;
-	*          - \c ballfd : A fixture definition is used to create a fixture. This class defines an abstract fixture definition. You can reuse fixture definitions safely like friction is set to 0 ,density is set to 1 units ,setting its shape to cirlce and coefficient of restituation to 0 (Restitution is used to make objects bounce. The restitution value is usually set to be between 0 and 1). A value of zero means the ball won't bounce.
-	*    - \c b2BodyDef ballbd
-	*          - \c ballbd.position of the spherical ball is set to (x+3,10 + y) i.e above the horizontal rotating bar
-	*          - \c ballbd->type is not set to b2_dynamicBody so that it doesnt move and respond to forces.
-	*    - At the end sbody is attached to the world and body definition is attached to it
-	*/
     {
       b2Body* spherebody;
       b2CircleShape circle;
@@ -487,44 +453,7 @@ namespace cs296
       spherebody = m_world->CreateBody(&ballbd);
       spherebody->CreateFixture(&ballfd);
     }
-    
-	/*! \b The \b rotating \b vertical \b bar 
-	* - \c b2Body* body      
-	*     - \c body : its a rigid body pointer which will represent each of the revolving vertical platform
-	* - \c b2PolygonShape shape;
-	*     - \c shape : to set shape to the revolving vertical platform. Its a vertical rectangle with dimension .2*2.2   
-	* - \c b2FixtureDef fd;
-	*     - \c fd : A fixture definition is used to create a fixture. density is set to 1 and setting its shape
-	* - \c b2BodyDef bd;
-	*     - \c bd : defines a new body "bd" with default variables set .You must set the body type to b2_dynamicBody if you want the body to move in response to forces.It is placed at position at (x,y-4)
-	* - At the end, body is attached to the world.
-	*/
-
-	/*!- \a Hinge \a for \a vertical \a platform \a ( \a Hidden  \a bar)
-	*     - \c b2Body* body
-	*           - \c body : its a rigid body pointer 
-	*     - \c b2PolygonShape shape2;
-	*           - \c shape2 : to set shape to the revolving horizontal platform. Its a vertical rectangle with dimension .2*2   
-	*     - \c b2FixtureDef fd;
-	*           - \c fd : A fixture definition is used to create a fixture. This class defines an abstract fixture definition. You can reuse fixture definitions safely like setting its shape
-	*     - \c b2BodyDef bd;
-	*           - \c bd : defines a new body "bd" with default variables set .Its not made dynamic so that it can act as a hinge for horizonatl rotating bar.It is placed at position at (14,16) 
-	*     - At the end, body is attached to the world.
-	*/
-
-	/*!
-	* - \c b2RevoluteJointDef jointDef 
-	*     - \c jointDef It is to attach both the bodies the vertical rotating bar and the vertical hidden fixed bar to a common anchor point so that vertical bar can rotate about this point.
-
-	*     - \c jointDef.bodyA = vertical bar
-	*     - \c jointDef.bodyB = hidden bar;
-	*     - \c jointDef.localAnchorA = The local anchor point relative to bodyA's origin. 
-	*     - \c jointDef.localAnchorB = The local anchor point relative to bodyB's origin. 
-	*     - \c collideConnected: Set this flag to true if the attached bodies should collide. 
-	*     - Finally, it is also attached to the world.
-	*/
-  
-  //vertical bar to support the rigth box of pulley system
+      //support for right box
     {
       b2PolygonShape shape;
       shape.SetAsBox(.2f, 2.2f);
@@ -555,25 +484,23 @@ namespace cs296
       m_world->CreateJoint(&jointDef);
     }
 
-
-	/*! \b Stairs
-	* - \c b2BodyDef bd
-	*   - \c bd defines a body in the world.
-	* - \c b2Body* f
-	*   - \c f : represents the actual edge body in the world
-	* - The stairs are formed by a total of 7 edge shaped bodies
-	* - \c float x
-	*   - \c x : the initial x-coordinate of the edges
-	* - \c float y
-	*   - \c y : the initial y-coordinate of the edges
-	* - \c float x_offset
-	*   - \c x_offset : the horizontal offset between two consecutive edges
-	* - \c float y_offset
-	*   - \c y_offset : the vertical offset between two consecutive edges
-	* - \c float x1[7], x2[7], y1[7], y2[7] 
-	*   - Each edge starts at (x1[i], y1[i]) and ends at (x2[i], y2[i])
-	*/
-
+    /*! \b Stairs
+    * - \c b2BodyDef bd
+    *   - \c bd defines a body in the world.
+    * - \c b2Body* f
+    *   - \c f : represents the actual edge body in the world
+    * - The stairs are formed by a total of 7 edge shaped bodies
+    * - \c float x
+    *   - \c x : the initial x-coordinate of the edges
+    * - \c float y
+    *   - \c y : the initial y-coordinate of the edges
+    * - \c float x_offset
+    *   - \c x_offset : the horizontal offset between two consecutive edges
+    * - \c float y_offset
+    *   - \c y_offset : the vertical offset between two consecutive edges
+    * - \c float x1[7], x2[7], y1[7], y2[7] 
+    *   - Each edge starts at (x1[i], y1[i]) and ends at (x2[i], y2[i])
+    */
     //Stairs
     {
       b2BodyDef bd;
@@ -644,6 +571,7 @@ namespace cs296
       }
     }
 
+
     //Hammer
     {
       float hammer_x = -0.1,
@@ -668,7 +596,7 @@ namespace cs296
 
       //hammer part 2
       b2PolygonShape shape2;
-      shape2.SetAsBox(2.0f,0.5f,b2Vec2(-0.1f,hammer_length + 0.7f),0);//TODO
+      shape2.SetAsBox(2.0f,0.5f,b2Vec2(0,hammer_length + 0.7f),0);
       b2FixtureDef *fd2 = new b2FixtureDef;
       fd2->density = 20.f;
       fd2->shape = new b2PolygonShape;
@@ -716,113 +644,73 @@ namespace cs296
     }
     
     x=-20.0f,y=10.0f;
-    //Swing
-    //Swing
-	/*! Rotating Platfroms with Swinging plank resting on stationary platform
-	* - x and y are the coordinates of mid point of stationary platform and then everything is set with respect to it
-	*/
-    {
-      b2Body *box;
-      b2BodyDef *bd1 = new b2BodyDef;
-      bd1->position.Set(x,y);
-      b2FixtureDef *fd1 = new b2FixtureDef;
-      fd1->density = 10.0f;
-      fd1->friction = .5;
-      fd1->restitution = 0.f;
-      fd1->shape = new b2PolygonShape;
-      b2PolygonShape bs11;
-      bs11.SetAsBox(10,0.2,b2Vec2(0.0f,0.0f),0);
-      fd1->shape = &bs11;
-      //stationary planks
-		/*!Stationary Platform 
-		* - \c b2FixtureDef *fd1 -- Horizontal
-		* - \c b2FixtureDef *fd2 -- Left Vertical
-		* - \c b2FixtureDef *fd3 -- Right Vertical
-		* - About three b2FixtureDef
-		*   - the vertical sides of this platform are the sides on top of which two roatating platforms are attatched which are holding two balls.
-		*   - there desity is set to 10units. and friction is set to .5 and coefficient of restitution is set to 0 so that it won't move coz of collisons.
-		*   - All three fixtures have same fixture properties but different lengths and positions such that they make a stand type structu    
-		*     - \c bd1->type is not set to b2_dynamicBody so that it doesnt move and respond to forces.
-		re.
-		*   - Two rectangles are vertical with dimensions .2*4 ( left one ) and .2*2 ( the left one) while third one is horizontal with dimensions 10*.2.
-		*   - At the end, all the fixtures are attached to box and box is then attached to the main world 
-		* - \c b2BodyDef *bd1
-		*     - \c bd1 defines pointer of body in a world.The world position of the body is set to (-20,10)
-		*     - \c bd1->type is not set to b2_dynamicBody so that it doesnt move and respond to forces.
-		*/
-      { 
-        b2FixtureDef *fd2 = new b2FixtureDef;
-        fd2->density = 10.0;
-        fd2->friction = 1.0;
-        fd2->restitution = 0.f;
-        fd2->shape = new b2PolygonShape;
-        b2PolygonShape bs12;
-        bs12.SetAsBox(0.2,4,b2Vec2(-10.0f,3.0f),0);
-        fd2->shape = &bs12; 
+		//Swing
+		{
+			b2Body *box;
+			b2BodyDef *bd1 = new b2BodyDef;
+			bd1->position.Set(x,y);
+			b2FixtureDef *fd1 = new b2FixtureDef;
+			fd1->density = 10.0f;
+			fd1->friction = .5;
+			fd1->restitution = 0.f;
+			fd1->shape = new b2PolygonShape;
+			b2PolygonShape bs11;
+			bs11.SetAsBox(10,0.2,b2Vec2(0.0f,0.0f),0);
+			fd1->shape = &bs11;
+			//stationary planks
+			{ 
+				b2FixtureDef *fd2 = new b2FixtureDef;
+				fd2->density = 10.0;
+                                fd2->friction = 0.5;
+				fd2->restitution = 0.f;
+				fd2->shape = new b2PolygonShape;
+				b2PolygonShape bs12;
+				bs12.SetAsBox(0.2,4,b2Vec2(-10.0f,3.0f),0);
+				fd2->shape = &bs12; 
 
-        b2FixtureDef *fd3 = new b2FixtureDef;
-        fd3->density = 10.0;
-        fd3->friction = 0.5;
-        fd3->restitution = 0.f;
-        fd3->shape = new b2PolygonShape;       
-        b2PolygonShape bs13;
-        bs13.SetAsBox(0.2,2,b2Vec2(10.0f,1.0f),0);
-        fd3->shape = &bs13;
+				b2FixtureDef *fd3 = new b2FixtureDef;
+				fd3->density = 10.0;
+				fd3->friction = 0.5;
+				fd3->restitution = 0.f;
+				fd3->shape = new b2PolygonShape;       
+				b2PolygonShape bs13;
+				bs13.SetAsBox(0.2,2,b2Vec2(10.0f,1.0f),0);
+				fd3->shape = &bs13;
 
-        box = m_world->CreateBody(bd1);
-        box->CreateFixture(fd1);
-        box->CreateFixture(fd2);
-        box->CreateFixture(fd3);
-      }
+				box = m_world->CreateBody(bd1);
+				box->CreateFixture(fd1);
+				box->CreateFixture(fd2);
+				box->CreateFixture(fd3);
+			}
 
-      //oscillating plank
-		/*Oscillating plank
-		* - \c b2BodyDef *bd2
-		*     - \c bd2 defines pointer of body in a world.The world position of the body is set to (x-7.5,y-8)
-		*     - \c bd2->type is set to b2_dynamicBody.You must set the body type to b2_dynamicBody if you want the body to move in response to forces.
-		* - It has a horizonatl plank which is of 10*.2 in dimension (similar to horizonatl fixture of stationary plank)
-		* - It is deflected a bit from its equilibrium position in order to give it some initial velocity when it is released.
-		* - TO keep motion in sync it is supported by a thin vertical rod below it in order to keep it stationary.
-		*/
-		/*!Two Thread between stationary plank and swinging plank
-		* - \c b2DistanceJointDef jointDef 
-		*     - \c jointDef It is to attach both the bodies ,stationary plank and swinging plank to constrain the motion of the swinging plank only in horizonatl direction. 
-		*/
-      {
-        b2Vec2 right_end(8.0f,0.0f);
-        b2Vec2 left_end(-8.0f,0.0f);
+			//oscillating plank
+			{
+				b2Vec2 right_end(8.0f,0.0f);
+				b2Vec2 left_end(-8.0f,0.0f);
 
-        b2BodyDef *bd2 = new b2BodyDef;
-        
-        bd2->type = b2_dynamicBody;
+				b2BodyDef *bd2 = new b2BodyDef;
+				
+				bd2->type = b2_dynamicBody;
         bd2->position.Set(x-7.5f,y-8.0f);
-        bs11.SetAsBox(10,0.2);
-        fd1->shape = &bs11;
-        b2Body* plank = m_world->CreateBody(bd2);
-        plank->CreateFixture(fd1);
+				bs11.SetAsBox(10,0.2);
+				fd1->shape = &bs11;
+				b2Body* plank = m_world->CreateBody(bd2);
+				plank->CreateFixture(fd1);
 
-        b2DistanceJointDef jointDef;
-        jointDef.Initialize(plank, box, plank->GetWorldPoint(right_end), box->GetWorldPoint(right_end));
-        (b2DistanceJoint*)m_world->CreateJoint(&jointDef);
-        jointDef.Initialize(plank, box, plank->GetWorldPoint(left_end), box->GetWorldPoint(left_end));
-        (b2DistanceJoint*)m_world->CreateJoint(&jointDef);
+				b2DistanceJointDef jointDef;
+				jointDef.Initialize(plank, box, plank->GetWorldPoint(right_end), box->GetWorldPoint(right_end));
+				(b2DistanceJoint*)m_world->CreateJoint(&jointDef);
+				jointDef.Initialize(plank, box, plank->GetWorldPoint(left_end), box->GetWorldPoint(left_end));
+				(b2DistanceJoint*)m_world->CreateJoint(&jointDef);
+				
+				m_world->CreateJoint(&jointDef);
         
-        m_world->CreateJoint(&jointDef);
-        
-		//Rod below it
-		/*!Supporting Rod Bleow Rotating Plank
-		* - \c b2BodyDef *bd3
-		*     - \c bd3 defines pointer of body in a world.The world position of the body is set to (x+2,y-17)
-		*     - \c bd3->type is set to b2_dynamicBody.You must set the body type to b2_dynamicBody if you want the body to move in response to forces.
-		* - \c b2FixtureDef *fd3
-		*     - \c fd3->desity is set to 10 units ,friction is set to .8 and coefficient of restitution is set to 0 (default) so that it won't move coz of collisons.
-		*     - A rectangle with dimension .1 * (y-1.4) ( its relative to the height of rotating palnk)
-		*/ 
+        //Rod below it
         b2BodyDef *bd3 = new b2BodyDef;
         
         bd3->type = b2_dynamicBody;
         bd3->position.Set(x+2,y-17.0f);
-        b2PolygonShape bs12;
+  			b2PolygonShape bs12;
         bs12.SetAsBox(0.1,y-1.4);
         b2FixtureDef *fd4 = new b2FixtureDef;
         fd4->friction = 0.8;
@@ -831,40 +719,11 @@ namespace cs296
         b2Body* rod = m_world->CreateBody(bd3);
         rod->CreateFixture(fd4);
         
+        
       }
     }
+
  //rotating plank 1
-	/*!Rotating plank 1 (Left)
-	* - \c b2FixtureDef *fd1 -- Horizontal
-	* - \c b2FixtureDef *fd2 -- Left Vertical
-	* - About two b2FixtureDef
-	*   - the vertical side of this platform is the side on by which A big Ball is resting 
-	*   - desity = 10units (vertical side) = 1.5( for base/horizontal bar). and friction is set to .5 and coefficient of restitution is set to 0 so that it won't move coz of collisons.
-	re.
-	*   - One rectangle is vertical with dimensions .2*1 ( on left ) while other one is horizontal with dimensions 12*.2.
-	*   - At the end, all the fixtures are attached to box and box is then attached to the main world 
-	* - \c b2BodyDef *bd
-	*     - \c bd defines pointer of body in a world.The world position of the body is set to (x-10,y+7)
-	*     - \c bd->type is set to b2_dynamicBody.You must set the body type to b2_dynamicBody if you want the body to move in response to forces.
-	* - If the plank rotates to the left then ball resting on it will fall on the slant edge made on left side of plank below it.
-	*/
-
-	/*!- \a Hinge \a for \a left \a rotating \a platform \a ( \a Hidden  \a bar)
-	*     - \c b2Body* body
-	*           - \c body : its a rigid body pointer 
-	*     - \c b2PolygonShape shape2;
-	*           - \c shape2 : to set shape to the rotating horizontal platform. dimension .2*2   
-	*     - \c b2FixtureDef fd;
-	*           - \c fd : A fixture definition is used to create a fixture.
-	*     - \c b2BodyDef bd;
-	*           - \c bd : defines a new body "bd" with default variables set .Its not made dynamic.It is placed at position at (x-10.0f, y+7.5f) 
-	*/
-
-	/*!
-	* - \c b2RevoluteJointDef jointDef 
-	*     - \c jointDef It is to attach both the bodies the Horizontal rotating bar and the vertical hidden fixed bar to a common anchor point so that horizontal bar can rotate about this point.
-	   - Finally, it is also attached to the world.
-	*/
   {
     b2BodyDef *bd = new b2BodyDef; 
     bd->type = b2_dynamicBody;
@@ -908,37 +767,6 @@ namespace cs296
   }
 
   //rotating plank 2
-	/*!Rotating plank 2 (Right)
-	* - \c b2FixtureDef *fd1 -- Horizontal
-	* - \c b2FixtureDef *fd2 -- Left Vertical
-	* - About two b2FixtureDef
-	*   - the vertical side of this platform is the side on by which a small Ball is resting 
-	*   - desity = 1units (vertical side) = 1( for base/horizontal bar). and friction is set to .5 and coefficient of restitution is set to 0 so that it won't move coz of collisons.
-	re.
-	*   - One rectangle is vertical with dimensions .2*1 ( on right ) while other one is horizontal with dimensions 12*.2.
-	*   - At the end, all the fixtures are attached to box and box is then attached to the main world 
-	* - \c b2BodyDef *bd
-	*     - \c bd defines pointer of body in a world.The world position of the body is set to (x+10.0f,y+3.0f)
-	*     - \c bd->type is set to b2_dynamicBody.You must set the body type to b2_dynamicBody if you want the body to move in response to forces.
-	* - If the plank rotates to the right then ball resting on it will fall on the funnel shaped structure on its right and below it.
-	*/
-
-	/*!- \a Hinge \a for \a right \a rotating \a platform \a ( \a Hidden  \a bar)
-	*     - \c b2Body* body
-	*           - \c body : its a rigid body pointer 
-	*     - \c b2PolygonShape shape2;
-	*           - \c shape2 : to set shape to the rotating horizontal platform. dimension .2*2   
-	*     - \c b2FixtureDef fd;
-	*           - \c fd : A fixture definition is used to create a fixture.
-	*     - \c b2BodyDef bd;
-	*           - \c bd : defines a new body "bd" with default variables set .Its not made dynamic.It is placed at position at (x-10.0f, y+7.5f) 
-	*/
-
-	/*!
-	* - \c b2RevoluteJointDef jointDef 
-	*     - \c jointDef It is to attach both the bodies the Horizontal rotating bar and the vertical hidden fixed bar to a common anchor point so that horizontal bar can rotate about this point.
-	   - Finally, it is also attached to the world.
-	*/
   {
     b2BodyDef *bd = new b2BodyDef; 
     bd->type = b2_dynamicBody;
@@ -981,21 +809,6 @@ namespace cs296
   }
 
   //Balls on the rotating planks
-  /*!BAlls on rotating planks
-  *    - \c b2Body* spherebody
-    *          - \c spherebody sets the shape as spherically appearing 2d circular body
-    *    - \c b2CircleShape circle
-    *          - \c b2CircleShape is set to a circle with radius 2 for bigger one and 1 for smaller one.
-    *    - \c b2FixtureDef ballfd;
-    *          - \c ballfd : A fixture definition is used to create a fixture.
-    *          - \c density of bigger ball is twice that of smaller so that at the end it can lift smaller ball giving it good initial impulse.
-    *           - \c coeff of restitution is set to .9 for smalller so that it can reflect after collison while its 0 for bigger ball
-    *           - \c coeff of friction is set to 0 for smalller so that it does not rotate while reflection during collison while its 0.6 for bigger ball
-    *          - \c ballbd.position of the 2 spherical balls is set with respect to the platforms on which they resting so that they are placed near vertical sides of the rotating platforms and when they move these balls will fall from other side.
-    *- Balls are placed at position where they are hit by vertical roating bars at position where vertical bar is at its lowest position.
-    *    - \c b2BodyDef ballbd
-    *          - \c ballbd.type is set to b2_dynamicBody.You must set the body type to b2_dynamicBody if you want the body to move in response to forces.
-  */
   {
     b2Body* spherebody;
 
@@ -1009,7 +822,9 @@ namespace cs296
 
     for (int i = 0; i < 2; i++){
       ballfd.shape = &circle[i];
-      ballfd.density = 10.0f + i*5.0f;
+        ballfd.density = 10.0f + i*10.0f;
+        ballfd.friction = 0.0f + .6*i;
+        ballfd.restitution = .9-.9*i;
       ballbd.position.Set(x-i,y+4+5*i);
       spherebody = m_world->CreateBody(&ballbd);
       spherebody->CreateFixture(&ballfd);
@@ -1017,78 +832,8 @@ namespace cs296
   }
   
    //Replacing knife
-	/*!
-	* \b The \b 3 Balls \b And \b 3 Vertical Rotating Bars System.
-	*- first the lowest plank is place with ball on it and vertical roating bar at its end.
-	*- x =45.0 and y=22.5 are the coordinates of pivot of the lowest rotating bar. Everything else including the above platforms and roating bars and balls are placed with respect to this point.
-	*/
-
-	/*! 3 Platforms 
-	*- \c b2EdgeShape shape
-	*  - \c shape : to set shape to the fixed stationary solid object 
-	*- \c b2BodyDef bd
-	*  - \c Body with the given body definition will be formed and setting density to 0 makes it immovable. 
-	* - \c b2Body* b1
-	  *  - b1: its a rigid body pointer which will represent the ground
-	*/    
-
-	/*! 3 Vertical Roating Bars
-	* - \c b2Body* body      
-	*     - \c body : its a rigid body pointer which will represent each of the revolving vertical bar
-	* - \c b2PolygonShape shape;
-	*     - \c shape : to set shape to the revolving vertical bars. they are vertical rectangles with dimension .2*1.5   
-	* - \c b2FixtureDef fd;
-	*     - \c fd : A fixture definition is used to create a fixture. This class defines an abstract fixture definition.Density is set to 10 and setting its shape
-	* - \c b2BodyDef bd;
-	*     - \c bd : defines a new body "bd" with default variables set .You must set the body type to b2_dynamicBody if you want the body to move in response to forces.
-	*- these bars are palced at position relative to right end of horizontal platform. 1st and 3rd are at right and of the platform (x+.2) while the middle one is the left end of the platform (x-5.2)
-	*- they were placed in order to make the balls placed on lower platform move when they are hit by vertical bars.
-	* - At the end, body is attached to the world.
-	*/
-
-	/*!- \a Hinge \a for \a vertical \a bars \a ( \a Hidden  \a bar)
-	*     - \c b2Body* body
-	*           - \c body : its a rigid body pointer 
-	*     - \c b2PolygonShape shape2;
-	*           - \c shape2 : to set shape to the revolving horizontal platform. Its a vertical rectangle with dimension .2*2   
-	*     - \c b2FixtureDef fd;
-	*           - \c fd : A fixture definition is used to create a fixture. This class defines an abstract fixture definition. You can reuse fixture definitions safely like setting its shape
-	*     - \c b2BodyDef bd;
-	*           - \c bd : defines a new body "bd" with default variables set .Its not made dynamic so that it can act as a hinge for horizonatl rotating bar.It is placed at position at (14,16) 
-	*     - At the end, body is attached to the world.
-	*/
-
-	/*!
-	 * - \c b2RevoluteJointDef jointDef 
-	*     - \c jointDef It is to attach both the bodies the vertical rotating bar and the vertical hidden fixed bar to a common anchor point so that vertical bar can rotate about this point.
-	*     - \c jointDef.bodyA = vertical bar
-	*     - \c jointDef.bodyB = hidden bar;
-	*     - \c jointDef.localAnchorA = The local anchor point relative to bodyA's origin. 
-	*     - \c jointDef.localAnchorB = The local anchor point relative to bodyB's origin. 
-	*     - \c collideConnected: Set this flag to true if the attached bodies should collide. 
-	*     - Vertical Bars rotate about these points and then finally hit a ball at their respective lowest position in order to move forward the simulation.
-	*     - Finally, it is also attached to the world.
-	*/   
-
-	/*!
-	* \b The \b 3 \b spheres \b on \b the \b platforms ( middle platform, bottom platform, floor-1)
-	*    - \c b2Body* spherebody
-	*          - \c spherebody sets the shape as spherically appearing 2d circular body
-	*    - \c b2CircleShape circle
-	*          - \c b2CircleShape is set to a circle with radius 1.
-	*    - \c b2FixtureDef ballfd;
-	*          - \c ballfd : A fixture definition is used to create a fixture. This class defines an abstract fixture definition. You can reuse fixture definitions safely like friction is set to 0 ,density is set to 1 units ,setting its shape to cirlce and coefficient of restituation to 0 (Restitution is used to make objects bounce. The restitution value is usually set to be between 0 and 1). A value of zero means the ball won't bounce.
-	*          - \c ballbd.position of the 3 spherical balls is set with respect to the platforms on which they resting like the one on middle one is at its right end and on bottom platform its at its left end and 3rd one is just below the 3rd rotating bar on floor-1. 
-	*- Balls are placed at position where they are hit by vertical roating bars at position where vertical bar is at its lowest position.
-	*    - \c b2BodyDef ballbd
-	*          - \c ballbd.type is set to b2_dynamicBody.You must set the body type to b2_dynamicBody if you want the body to move in response to forces.
-	*    - At the end spherebodies are attached to the world and body definition is attached to it
-	*/
-
   //3rd and lowest plank with rod for it and ball for it
   x=45.0f,y=22.5f;
-
-        
         {
           b2EdgeShape shape;
           b2BodyDef bd;
@@ -1106,7 +851,6 @@ namespace cs296
 
         b2BodyDef bd;
         bd.position.Set(x+.2f, y+1.7f);
-        // bd.angle = -.1;
         bd.type = b2_dynamicBody;
         b2Body* body = m_world->CreateBody(&bd);
         b2FixtureDef *fd = new b2FixtureDef;
@@ -1223,6 +967,36 @@ namespace cs296
           b1->CreateFixture(&shape, 0.0f);
         }
 
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(.2f, 1.5f);
+
+      b2BodyDef bd;
+      bd.position.Set(x+.2f, y+1.7f);
+      // bd.angle = -.1;
+      bd.type = b2_dynamicBody;
+      b2Body* body = m_world->CreateBody(&bd);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 10.f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body->CreateFixture(fd);
+
+      b2PolygonShape shape2;
+      // shape2.SetAsBox(0.2f, 2.0f);
+      b2BodyDef bd2;
+      bd2.position.Set(x+.2f, y+.2f);
+      b2Body* body2 = m_world->CreateBody(&bd2);
+
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = body;
+      jointDef.bodyB = body2;
+      jointDef.localAnchorA.Set(0,-1.5f);
+      jointDef.localAnchorB.Set(0,0);
+      jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+    }
+
     //Ground
     b2Body* b1;
     {
@@ -1233,10 +1007,10 @@ namespace cs296
       b1 = m_world->CreateBody(&bd);
       b1->CreateFixture(&shape, 0.0f);
     }
-    
+		
     //funnel
     {
-      float shift_x = -0,shift_y=-0.5;
+		  float shift_x = -0,shift_y=-0.5;
       b2BodyDef bd;
       b2Body* f;
       for(int i = 0; i < 2; i++){
@@ -1320,7 +1094,7 @@ namespace cs296
       b2BodyDef bd;
       bd.position.Set(swas_x, swas_y);
       bd.type = b2_dynamicBody;
-      bd.angle = -.1;
+      //bd.angle = -.1;
       b2Body* body = m_world->CreateBody(&bd);
 
       b2FixtureDef *fd = new b2FixtureDef;
@@ -1404,7 +1178,6 @@ namespace cs296
         fd2.shape = &shape3;
         fd2.density = 20.0f;        
 
-
         b2BodyDef bd;
         bd.type = b2_dynamicBody;
         // bd.angle = b2_pi/2;
@@ -1417,37 +1190,6 @@ namespace cs296
       }
 
       shape.SetAsBox(0.1f, 2.83f);
-
-
-      {
-        b2PolygonShape shape;
-        shape.SetAsBox(.2f, 1.5f);
-
-        b2BodyDef bd;
-        bd.position.Set(x+.2f, y+1.7f);
-        // bd.angle = -.1;
-        bd.type = b2_dynamicBody;
-        b2Body* body = m_world->CreateBody(&bd);
-        b2FixtureDef *fd = new b2FixtureDef;
-        fd->density = 10.f;
-        fd->shape = new b2PolygonShape;
-        fd->shape = &shape;
-        body->CreateFixture(fd);
-
-        b2PolygonShape shape2;
-        // shape2.SetAsBox(0.2f, 2.0f);
-        b2BodyDef bd2;
-        bd2.position.Set(x+.2f, y+.2f);
-        b2Body* body2 = m_world->CreateBody(&bd2);
-
-        b2RevoluteJointDef jointDef;
-        jointDef.bodyA = body;
-        jointDef.bodyB = body2;
-        jointDef.localAnchorA.Set(0,-1.5f);
-        jointDef.localAnchorB.Set(0,0);
-        jointDef.collideConnected = false;
-        m_world->CreateJoint(&jointDef);
-      }
 
       fd.shape = &shape;
       fd.density = 20.0f;
@@ -1600,46 +1342,46 @@ namespace cs296
         }
       }
 
-      //Oscillating balls
-      {
-        float pos_x=6.5f+bottom_x,pos_y=ground_y + 26.7,thrd_len=10.3f;
-        b2Body* spherebody;
+			//Oscillating balls
+			{
+				float pos_x=6.5f+bottom_x,pos_y=ground_y + 26.7,thrd_len=8.8f;
+				b2Body* spherebody;
 
-        b2CircleShape circle;
-        circle.m_radius = 0.5;
+				b2CircleShape circle;
+				circle.m_radius = 0.5;
 
-        b2FixtureDef ballfd;
-        ballfd.shape = &circle;
-        ballfd.density = 1.0f;
-        ballfd.friction = 0.0f;
-        ballfd.restitution = 1.0f;
-        for (int i = 0; i < 4; ++i){
-          b2BodyDef ballbd;
-          ballbd.type = b2_dynamicBody;
-          float pos_x1 = pos_x + i*(2*circle.m_radius + 0.02f);
-          ballbd.position.Set(pos_x1 , pos_y);
-          spherebody = m_world->CreateBody(&ballbd);
-          spherebody->CreateFixture(&ballfd);
+				b2FixtureDef ballfd;
+				ballfd.shape = &circle;
+				ballfd.density = 1.0f;
+				ballfd.friction = 0.0f;
+				ballfd.restitution = 1.0f;
+				for (int i = 0; i < 4; ++i){
+					b2BodyDef ballbd;
+					ballbd.type = b2_dynamicBody;
+					float pos_x1 = pos_x + i*(2*circle.m_radius + 0.02f);
+					ballbd.position.Set(pos_x1 , pos_y);
+					spherebody = m_world->CreateBody(&ballbd);
+					spherebody->CreateFixture(&ballfd);
 
-          b2Body* b4;
-          {
-            b2BodyDef bd;
-            bd.position.Set(pos_x1,pos_y + thrd_len);
-            b4 = m_world->CreateBody(&bd);
-          }
+					b2Body* b4;
+					{
+						b2BodyDef bd;
+						bd.position.Set(pos_x1,pos_y + thrd_len);
+						b4 = m_world->CreateBody(&bd);
+					}
 
-          b2RevoluteJointDef jd;
-          b2Vec2 anchor;
-          anchor.Set(pos_x1, pos_y+thrd_len);
-          jd.Initialize(spherebody, b4, anchor);
-          m_world->CreateJoint(&jd);     
-        }
-      }
-    }
+					b2RevoluteJointDef jd;
+					b2Vec2 anchor;
+					anchor.Set(pos_x1, pos_y+thrd_len);
+					jd.Initialize(spherebody, b4, anchor);
+					m_world->CreateJoint(&jd);     
+				}
+			}
+		}
   }
   
   
 
-
   sim_t *sim = new sim_t("Dominos", dominos_t::create);
 }
+
