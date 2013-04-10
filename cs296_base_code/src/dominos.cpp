@@ -410,6 +410,23 @@ namespace cs296
       m_world->CreateJoint(&jointDef);
     }
 
+    /*! \b Stairs
+    * - \c b2BodyDef bd
+    *   - \c bd defines a body in the world.
+    * - \c b2Body* f
+    *   - \c f : represents the actual edge body in the world
+    * - The stairs are formed by a total of 7 edge shaped bodies
+    * - \c float x
+    *   - \c x : the x-coordinate of the edges
+    * - \c float y
+    *   - \c y : the y-coordinate of the edges
+    * - \c float x_offset
+    *   - \c x_offset : the horizontal offset between two consecutive edges
+    * - \c float y_offset
+    *   - \c y_offset : the vertical offset between two consecutive edges
+    * - \c float x1[7], x2[7], y1[7], y2[7] 
+    *   - Each edge starts at (x1[i], y1[i]) and ends at (x2[i], y2[i])
+    */
     //Stairs
     {
       b2BodyDef bd;
@@ -503,70 +520,70 @@ namespace cs296
       m_world->CreateJoint(&jointDef);
     }
 
-	 	x=-20.0f,y=10.0f;
-		//Swing
-		{
-			b2Body *box;
-			b2BodyDef *bd1 = new b2BodyDef;
-			bd1->position.Set(x,y);
-			b2FixtureDef *fd1 = new b2FixtureDef;
-			fd1->density = 10.0f;
-			fd1->friction = .5;
-			fd1->restitution = 0.f;
-			fd1->shape = new b2PolygonShape;
-			b2PolygonShape bs11;
-			bs11.SetAsBox(10,0.2,b2Vec2(0.0f,0.0f),0);
-			fd1->shape = &bs11;
-			//stationary planks
-			{ 
-				b2FixtureDef *fd2 = new b2FixtureDef;
-				fd2->density = 10.0;
-				fd2->friction = 1.0;
-				fd2->restitution = 0.f;
-				fd2->shape = new b2PolygonShape;
-				b2PolygonShape bs12;
-				bs12.SetAsBox(0.2,4,b2Vec2(-10.0f,3.0f),0);
-				fd2->shape = &bs12; 
+    x=-20.0f,y=10.0f;
+    //Swing
+    {
+      b2Body *box;
+      b2BodyDef *bd1 = new b2BodyDef;
+      bd1->position.Set(x,y);
+      b2FixtureDef *fd1 = new b2FixtureDef;
+      fd1->density = 10.0f;
+      fd1->friction = .5;
+      fd1->restitution = 0.f;
+      fd1->shape = new b2PolygonShape;
+      b2PolygonShape bs11;
+      bs11.SetAsBox(10,0.2,b2Vec2(0.0f,0.0f),0);
+      fd1->shape = &bs11;
+      //stationary planks
+      { 
+        b2FixtureDef *fd2 = new b2FixtureDef;
+        fd2->density = 10.0;
+        fd2->friction = 1.0;
+        fd2->restitution = 0.f;
+        fd2->shape = new b2PolygonShape;
+        b2PolygonShape bs12;
+        bs12.SetAsBox(0.2,4,b2Vec2(-10.0f,3.0f),0);
+        fd2->shape = &bs12; 
 
-				b2FixtureDef *fd3 = new b2FixtureDef;
-				fd3->density = 10.0;
-				fd3->friction = 0.5;
-				fd3->restitution = 0.f;
-				fd3->shape = new b2PolygonShape;       
-				b2PolygonShape bs13;
-				bs13.SetAsBox(0.2,2,b2Vec2(10.0f,1.0f),0);
-				fd3->shape = &bs13;
+        b2FixtureDef *fd3 = new b2FixtureDef;
+        fd3->density = 10.0;
+        fd3->friction = 0.5;
+        fd3->restitution = 0.f;
+        fd3->shape = new b2PolygonShape;       
+        b2PolygonShape bs13;
+        bs13.SetAsBox(0.2,2,b2Vec2(10.0f,1.0f),0);
+        fd3->shape = &bs13;
 
-				box = m_world->CreateBody(bd1);
-				box->CreateFixture(fd1);
-				box->CreateFixture(fd2);
-				box->CreateFixture(fd3);
-			}
+        box = m_world->CreateBody(bd1);
+        box->CreateFixture(fd1);
+        box->CreateFixture(fd2);
+        box->CreateFixture(fd3);
+      }
 
-			//oscillating plank
-			{
-				b2Vec2 right_end(8.0f,0.0f);
-				b2Vec2 left_end(-8.0f,0.0f);
+      //oscillating plank
+      {
+        b2Vec2 right_end(8.0f,0.0f);
+        b2Vec2 left_end(-8.0f,0.0f);
 
-				b2BodyDef *bd2 = new b2BodyDef;
-				
-				bd2->type = b2_dynamicBody;
-				bd2->position.Set(x+10.0f,y-9.0f);
-				//bd2->fixedRotation = true;
-				bs11.SetAsBox(10,0.2);
-				fd1->shape = &bs11;
-				b2Body* plank = m_world->CreateBody(bd2);
-				plank->CreateFixture(fd1);
+        b2BodyDef *bd2 = new b2BodyDef;
+        
+        bd2->type = b2_dynamicBody;
+        bd2->position.Set(x+10.0f,y-9.0f);
+        //bd2->fixedRotation = true;
+        bs11.SetAsBox(10,0.2);
+        fd1->shape = &bs11;
+        b2Body* plank = m_world->CreateBody(bd2);
+        plank->CreateFixture(fd1);
 
-				b2DistanceJointDef jointDef;
-				jointDef.Initialize(plank, box, plank->GetWorldPoint(right_end), box->GetWorldPoint(right_end));
-				(b2DistanceJoint*)m_world->CreateJoint(&jointDef);
-				jointDef.Initialize(plank, box, plank->GetWorldPoint(left_end), box->GetWorldPoint(left_end));
-				(b2DistanceJoint*)m_world->CreateJoint(&jointDef);
-				
-				m_world->CreateJoint(&jointDef);
-			}
-		}
+        b2DistanceJointDef jointDef;
+        jointDef.Initialize(plank, box, plank->GetWorldPoint(right_end), box->GetWorldPoint(right_end));
+        (b2DistanceJoint*)m_world->CreateJoint(&jointDef);
+        jointDef.Initialize(plank, box, plank->GetWorldPoint(left_end), box->GetWorldPoint(left_end));
+        (b2DistanceJoint*)m_world->CreateJoint(&jointDef);
+        
+        m_world->CreateJoint(&jointDef);
+      }
+    }
 
     //Inclined plank
     {
