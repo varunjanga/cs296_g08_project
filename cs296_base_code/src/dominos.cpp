@@ -573,6 +573,22 @@ namespace cs296
 
 
     //Hammer
+		/**
+		\b Hammer \b on \b Middle \b Floor
+			- \c b2BodyDef bd
+				- \c bd : defines a new body bd with default variables set as dynamic body
+			- \c b2PolygonShape shape,shape2
+				The shapes of the handle and head are set.
+			- \c b2FixtureDef* fd,fd2
+				- These have the details of the 2 parts of the hammer (handle and head)
+				- The details here are density,shape.
+			- \c b2Body* body
+				The hammer body to which the fixtures fd and fd2 are added
+			- \c b2Body* invi_body
+				- invi_body : The invisible body to which hammer is joined for the following revolute joint.
+			- \c b2RevoluteJointDef jointDef
+				- jointDef: The joint about which the above cross and invisible body invi_body are rotating.
+		 */
     {
       float hammer_x = -0.1,
             hammer_y= 18.5f  ,
@@ -1008,8 +1024,15 @@ namespace cs296
       b1->CreateFixture(&shape, 0.0f);
     }
 		
-    //funnel
+    ///\b Funnel
     {
+			/** 
+			 * 	- \c b2BodyDef bd
+			 * 		- There is a single bodyDef bd which has the 4 edges (2 vertical edges,2 inclined edges) added to it
+			 * 	- \c b2EdgeShape shape
+			 * 		- shape : Takes the (start,end) coordinates of the edge
+			 * 	- \c CreateFixture adds the above edges to the body created after applying \c CreateBody on the bd. 
+			 */ 
 		  float shift_x = -0,shift_y=-0.5;
       b2BodyDef bd;
       b2Body* f;
@@ -1035,8 +1058,21 @@ namespace cs296
       }
     }
    
-    //rotating plank  below funnel
+    /// \b Rotating \b Plank \b below \b Funnel
     {
+		/** 
+      - \c b2BodyDef bd
+            - \c bd : defines a new body bd with default variables set as dynamic body
+      - \c b2FixtureDef* fd1,fd2
+			- These have the details of the plank and the small extension on right side
+			- The details are density,friction,restitution,shape.
+      - \c b2Body* box1
+			- box1 : The b2Body pointer to which the above fixtures will be added.
+	  - \c b2BodyDef bd2
+			- bd2 : The invisible body to which box1 is joined for the following revolute joint
+	  - \c b2RevoluteJointDef jointDef
+			- jointDef: The joint about which the above box1 and invisible body bd2 are rotating 
+		 */
       float x=7;
       b2BodyDef *bd = new b2BodyDef; 
       bd->type = b2_dynamicBody;
@@ -1081,8 +1117,24 @@ namespace cs296
 
     }
 
-    //Swastik
+    /// \b Cross
     {
+		/**
+		- \c b2BodyDef bd
+			- \c bd : defines a new body bd with default variables set as dynamic body
+		- \c b2PolygonShape body
+			- \c body : to set the above bodydef to the cross.
+		- \c b2FixtureDef* fd,fd2
+			- These have the details of the 2 parts of the cross
+			- The details here are density,shape.
+		- \c b2PolygonShape shape
+			- \c shape : to set shape of the horizontal rod in fd,vertical rod in fd2.
+		- The 2 fixtures having the shapes of the vertical and horizontal are added to the body above. 
+		- \c b2BodyDef ibd
+			- bd2 : The invisible body to which cross is joined for the following revolute joint
+		- \c b2RevoluteJointDef jointDef
+			- jointDef: The joint about which the above cross and invisible body ibd are rotating 
+		*/
       //Horizontal Rod
       float rod_length=5.3f,
              rod_density=50,
@@ -1113,7 +1165,20 @@ namespace cs296
       fd2->shape = &shape2;
       body->CreateFixture(fd2);
 
-      //balls
+	/// \b Balls \b on \b the \b cross
+		/**
+		- \c b2Body* spherebody
+			The b2Body pointer variable used for assigning the object formed by \c CreateBody to which the CreateFixture adds the below fixture
+		- \c b2CircleShape circle
+			- \c circle : to set shape of the balls
+		- \c b2BodyDef bd
+			- \c bd : defines a new body bd with default variables set as dynamic body
+		- \c b2PolygonShape body
+			- \c body : to set the above bodydef to the cross.
+		- \c b2FixtureDef* ballfd
+			- These have the details of the balls
+			- The details here are density,shape,friction,restitution.
+		*/
       b2Body* spherebody;
       b2CircleShape circle;
       circle.m_radius = 0.5;
@@ -1258,9 +1323,45 @@ namespace cs296
       (b2DistanceJoint*)m_world->CreateJoint(&distDef);
     }
     
-    //Hammer and Plank System
+    /// \b Hammer \b and \b Plank \b System
     {
       float hammer_x = bottom_x + 23.8,hammer_y=0.7 + ground_y;
+      //Hammer
+       
+		/**
+		- \a Hammer
+			- \c b2BodyDef bd
+				- \c bd : defines a new body bd with default variables set as dynamic body
+			- \c b2PolygonShape shape,shape2
+				The shapes of the handle and head are set.
+			- \c b2FixtureDef* fd,fd2
+				- These have the details of the 2 parts of the hammer (handle and head)
+				- The details here are density,shape.
+			- \c b2Body* body
+				The hammer body to which the fixtures fd and fd2 are added
+			- \c b2Body* invi_body
+				- invi_body : The invisible body to which hammer is joined for the following revolute joint.
+			- \c b2RevoluteJointDef jointDef
+				- jointDef: The joint about which the above cross and invisible body invi_body are rotating.
+		- \a Base \a on \a Bottom \a Right
+			- \c b2EdgeShape shape,shape2
+				- The objects in which shape is set as edge for the 2 edges platform and its co-ordinates are set
+			- \c b2BodyDef bd,bd2
+				- defines a new body bd with default variables set as dynamic body for the following bodies
+			- \c b2Body* b1,b2
+				- The Bodies for which above shapes are set.
+		- \a Plank
+			- \c b2BodyDef bd
+				- \c bd : defines a new body bd with default variables set as dynamic body
+			- \c b2PolygonShape shape
+				The shapes of the Plank which the bottom hammer hits.
+			- \c b2FixtureDef* fd
+				- This has the details of the 2 parts of the hammer (handle and head)
+				- The details here are density,shape.
+			- \c b2Body* body
+				The hammer body to which the fixture fd is added
+		*/
+
       //Hammer
       {
         b2BodyDef bd;
@@ -1342,8 +1443,26 @@ namespace cs296
         }
       }
 
-			//Oscillating balls
-			{
+		/// \b Oscillating \b balls
+      {
+		/**
+		- \c b2Body* spherebody
+			The b2Body pointer variable used for assigning the object formed by \c CreateBody to which the CreateFixture adds the below fixture
+		- \c b2CircleShape circle
+			- \c circle : to set shape of the balls
+		- \c b2BodyDef bd
+			- \c bd : defines a new body bd with default variables set as dynamic body
+		- \c b2PolygonShape body
+			- \c body : to set the above bodydef to the cross.
+		- \c b2FixtureDef* ballfd
+			- These have the details of the balls
+			- The details here are density,shape,friction,restitution.
+		- While every ball is created in the \c for loop an invisible body is created at some height above it about which it could rotate
+		- \c b2Body b4
+			- b4 : The invisible body to which the corresponding is joined for the following revolute joint
+		- \c b2RevoluteJointDef jd
+			- jd: The joint about which the above individual ball and it's corresponding invisible body are rotating 
+		*/
 				float pos_x=6.5f+bottom_x,pos_y=ground_y + 26.7,thrd_len=8.8f;
 				b2Body* spherebody;
 
